@@ -1,0 +1,28 @@
+name:                Media
+version:             0.1.0.0
+synopsis:            Video files classifier and player
+description:         Classifies videos files based on series and episode number and records which videos have been played in an sqlite3 database
+homepage:            https://github.com/Bilalh
+license:             Apache-2.0
+license-file:        LICENSE
+author:              Bilal Syed Hussain
+maintainer:          bhterra@gmail.com
+-- copyright:           
+category:            System
+build-type:          Simple
+cabal-version:       >=1.8
+
+executable media2
+  main-is:            main.hs
+  -- other-modules:       
+  build-depends:      base     == 4.6.*
+                     ,process
+                     ,shell-escape
+                     ,bytestring
+                     ,ansi-terminal
+                     ,containers
+                     ,filepath
+                     ,directory
+                     ,HDBC >=2.3
+                     ,HDBC-sqlite3 >=2.3
+                     
