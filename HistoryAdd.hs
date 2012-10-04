@@ -49,5 +49,8 @@ parseDateTime l@("in": num: "mins":[])  = do
     t <- getCurrentTime
     return t
     
-    
 parseDateTime _ = error "not imp"
+
+
+ten_seconds_before = addUTCTime (-10)
+
