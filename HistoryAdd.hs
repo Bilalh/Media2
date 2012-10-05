@@ -8,7 +8,7 @@ import Data.Time.Clock
 
 import Media.History
 import Media.Types
-
+import Media.Misc
 
 func str = return []
 
@@ -31,15 +31,11 @@ getTimeStamp = do
     let res = span (/= '.') $ show t
     return $ fst res
 
+
 parseIntError :: String -> Int
 parseIntError  num = case parseInt num of 
             Just d -> d
-            Nothing -> help 
-
-parseInt :: String -> Maybe Int
-parseInt s  =  case reads s :: [(Int,String)] of 
-            [(d,"")] -> Just d
-            otherwise -> Nothing
+            Nothing -> help
 
 help = error "Help"
 
