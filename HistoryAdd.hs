@@ -9,6 +9,7 @@ import Data.Time.Clock
 import Media.History
 import Media.Types
 import Media.Misc
+import Media.Time
 
 func str = return []
 
@@ -39,11 +40,19 @@ parseIntError  num = case parseInt num of
 
 help = error "Help"
 
--- splitOn " "
--- parseDateTime :: [String] -> IO String
-parseDateTime l@("in": num: "mins":[])  = do 
-    t <- getCurrentTime
-    return t
+addTime :: UTCTime -> Time -> UTCTime
+addTime utc time = let t =  timeToSeconds time
+                       i =  fromInteger t :: Int
+                       r = toEnum (i*1000000000000) :: NominalDiffTime in
+    addUTCTime (r) utc
+
+parseDate :: String -> IO UTCTime
+parseDate timeStr=  do 
+    now <- getCurrentTime
+    case parseTimeString now timeStr of 
+        Left _     -> return now 
+        Right time -> return $ addTime now time
+    
     
 parseDateTime _ = error "not imp"
 
