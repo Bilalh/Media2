@@ -11,26 +11,31 @@ import Media.Types
 import Media.Misc
 import Media.Time
 
-func str = return []
-
 main = do
     args <- getArgs
-    return $ processArgs $ args
+    res <- processArgs  args
+    putStrLn $ show res
+    return ()
 
 processArgs :: [String] -> IO Integer
 processArgs l@(series:lowerNum:[])  =  do
-        timeStamp <- getTimeStamp
+        t <- getCurrentTime
+        let timeStamp =  getTimeStamp  t
         addToHistory series lowerNum'  timeStamp
     where lowerNum' = parseIntError lowerNum
 
+processArgs l@(series:lowerNum:date:[])  =  do
+        t <- parseDate date
+        let timeStamp =  getTimeStamp  t
+        addToHistory series lowerNum'  timeStamp
+    where lowerNum' = parseIntError lowerNum
 
 processArgs _  = help
 
-getTimeStamp :: IO [Char]
-getTimeStamp = do 
-    t <- getCurrentTime
+getTimeStamp :: UTCTime -> [Char]
+getTimeStamp t =  
     let res = span (/= '.') $ show t
-    return $ fst res
+    in fst res
 
 
 parseIntError :: String -> Int

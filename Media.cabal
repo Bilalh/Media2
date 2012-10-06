@@ -35,3 +35,5 @@ executable histb
                       ,containers
                       ,time
                       ,split
+                      ,old-locale
+                      ,parsec
