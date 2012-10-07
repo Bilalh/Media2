@@ -2,9 +2,7 @@ import System.Environment(getArgs)
 
 import Data.Time.Format
 import Data.List.Split 
-
 import Data.Time.Clock
-
 
 import Media.History
 import Media.Types
@@ -20,14 +18,12 @@ main = do
 processArgs :: [String] -> IO Integer
 processArgs l@(series:lowerNum:[])  =  do
         t <- getCurrentTime
-        let timeStamp =  getTimeStamp  t
-        addToHistory series lowerNum'  timeStamp
+        addToHistory series lowerNum'  (getTimeStamp  t)
     where lowerNum' = parseIntError lowerNum
 
 processArgs l@(series:lowerNum:date:[])  =  do
         t <- parseDate date
-        let timeStamp =  getTimeStamp  t
-        addToHistory series lowerNum'  timeStamp
+        addToHistory series lowerNum'  (getTimeStamp  t)
     where lowerNum' = parseIntError lowerNum
 
 processArgs _  = help
@@ -37,13 +33,6 @@ getTimeStamp t =
     let res = span (/= '.') $ show t
     in fst res
 
-
-parseIntError :: String -> Int
-parseIntError  num = case parseInt num of 
-            Just d -> d
-            Nothing -> help
-
-help = error "Help"
 
 addTime :: UTCTime -> Time -> UTCTime
 addTime utc time = let t =  timeToSeconds time
@@ -57,10 +46,10 @@ parseDate timeStr=  do
     case parseTimeString now timeStr of 
         Left _     -> return now 
         Right time -> return $ addTime now time
-    
-    
-parseDateTime _ = error "not imp"
+        
+parseIntError :: String -> Int
+parseIntError  num = case parseInt num of 
+            Just d -> d
+            Nothing -> help
 
-
-ten_seconds_before = addUTCTime (-10)
-
+help = error "Help"

@@ -1,5 +1,3 @@
-
-
 import Media.IO
 import Media.Player
 import System.Process (runCommand)
@@ -13,6 +11,6 @@ main = do
     return pid
 
 play player = do
-    selected <- selectVideosInfo path latest
+    selected <- selectVideosInfo path oldest
     pid <- runCommand $ videoCommand player selected
     return pid
