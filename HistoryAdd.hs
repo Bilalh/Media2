@@ -10,6 +10,8 @@ import Media.Misc
 import Media.Time
 import Media.IO
 
+import System.Process (runCommand)
+
 import qualified Data.Map as M
 
 path="/Users/bilalh/Movies/.Movies/Anime/"
@@ -20,10 +22,13 @@ main = do
     putStrLn $ show res
     return ()
 
+
 processArgs :: [String] -> IO Integer
 processArgs l@(series:lowerNum:[])  =  do
         t <- getCurrentTime
-        addToHistory series lowerNum'  (getTimeStamp  t)
+        res <- addToHistory series lowerNum'  (getTimeStamp  t)
+        processExtra res series lowerNum'
+        return res
     where lowerNum' = parseIntError lowerNum
 
 processArgs l@(series:lowerNum:date:[])  =  do
@@ -33,7 +38,25 @@ processArgs l@(series:lowerNum:date:[])  =  do
 
 processArgs _  = help
 
+processExtra :: Integer -> String -> Int ->  IO ()
+processExtra  1 series number = do
+    putStrLn series
+    videos <- videosInfo path
+    case M.lookup series videos of
+        Nothing  ->  return ()
+        Just arr ->  do 
+            let selected = filter (\(VideoInfo{number=n}) -> n == 14) arr
+            putStrLn $ show selected
+            
+            runCommand $ labelFile (selected !! 0) "orange"
+            runCommand $ hideExtension (selected !! 0)
+            return ()
+    return ()
+    
+processExtra _ _ _ = do
+    return ()    
 
+-- colour here
 
 addTime :: UTCTime -> Time -> UTCTime
 addTime utc time = let t =  timeToSeconds time
