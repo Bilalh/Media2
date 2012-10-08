@@ -44,3 +44,4 @@ executable histb
                       ,ansi-terminal
                       ,filepath
                       ,directory
+                      ,process

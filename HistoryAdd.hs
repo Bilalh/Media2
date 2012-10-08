@@ -33,7 +33,9 @@ processArgs l@(series:lowerNum:[])  =  do
 
 processArgs l@(series:lowerNum:date:[])  =  do
         t <- parseDate date
-        addToHistory series lowerNum'  (getTimeStamp  t)
+        res <- addToHistory series lowerNum'  (getTimeStamp  t)
+        processExtra res series lowerNum'
+        return res
     where lowerNum' = parseIntError lowerNum
 
 processArgs _  = help
@@ -45,13 +47,14 @@ processExtra  1 series number = do
     case M.lookup series videos of
         Nothing  ->  return ()
         Just arr ->  do 
-            let selected = filter (\(VideoInfo{number=n}) -> n == 14) arr
-            putStrLn $ show selected
-            
-            runCommand $ labelFile (selected !! 0) "orange"
-            runCommand $ hideExtension (selected !! 0)
-            return ()
-    return ()
+            let selected = filter (\(VideoInfo{number=n}) -> n == number) arr
+            case selected of 
+                [x] -> do
+                    runCommand $ labelFile (selected !! 0) "orange"
+                    runCommand $ hideExtension (selected !! 0)
+                    putStrLn $ "Labeled and hid Extension of " ++ show x
+                    return ()
+                _   -> return ()
     
 processExtra _ _ _ = do
     return ()    

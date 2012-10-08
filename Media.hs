@@ -19,4 +19,5 @@ play player = do
     t <- getCurrentTime
     addToHistory (series selected) (number selected)  (getTimeStamp  t)
     runCommand $ labelFile selected "orange"
+    runCommand $ hideExtension selected
     return ()
