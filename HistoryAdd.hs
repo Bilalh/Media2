@@ -8,6 +8,11 @@ import Media.History
 import Media.Types
 import Media.Misc
 import Media.Time
+import Media.IO
+
+import qualified Data.Map as M
+
+path="/Users/bilalh/Movies/.Movies/Anime/"
 
 main = do
     args <- getArgs
@@ -28,10 +33,6 @@ processArgs l@(series:lowerNum:date:[])  =  do
 
 processArgs _  = help
 
-getTimeStamp :: UTCTime -> [Char]
-getTimeStamp t =  
-    let res = span (/= '.') $ show t
-    in fst res
 
 
 addTime :: UTCTime -> Time -> UTCTime

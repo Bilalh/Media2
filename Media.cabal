@@ -12,6 +12,7 @@ category:            System
 build-type:          Simple
 cabal-version:       >=1.8
 
+
 executable media2
   main-is:            Media.hs
   -- other-modules:       
@@ -25,6 +26,7 @@ executable media2
                      ,directory
                      ,HDBC >=2.3
                      ,HDBC-sqlite3 >=2.3
+                     ,time
                      
 executable histb
    main-is:            HistoryAdd.hs
@@ -37,3 +39,8 @@ executable histb
                       ,split
                       ,old-locale
                       ,parsec
+                      ,bytestring
+                      ,shell-escape
+                      ,ansi-terminal
+                      ,filepath
+                      ,directory
