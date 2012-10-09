@@ -1,1 +1,3 @@
 add Sqlite3 database creation script
+
+Put scripts in Extra in the $PATH

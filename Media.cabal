@@ -57,3 +57,29 @@ executable  nums2
                       ,containers
                       ,shell-escape
                       ,bytestring
+                      
+executable  numsf2
+   main-is:            Numsf.hs
+   -- other-modules:       
+   build-depends:      base     == 4.6.*
+                      ,HDBC >=2.3
+                      ,HDBC-sqlite3 >=2.3
+                      ,time
+                      ,old-locale
+                      ,ansi-terminal
+                      ,containers
+                      ,shell-escape
+                      ,bytestring
+                      
+executable  numss2
+   main-is:            Numss.hs
+   -- other-modules:       
+   build-depends:      base     == 4.6.*
+                      ,HDBC >=2.3
+                      ,HDBC-sqlite3 >=2.3
+                      ,time
+                      ,old-locale
+                      ,ansi-terminal
+                      ,containers
+                      ,shell-escape
+                      ,bytestring
