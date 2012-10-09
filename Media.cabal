@@ -45,3 +45,15 @@ executable histb
                       ,filepath
                       ,directory
                       ,process
+executable  nums2
+   main-is:            Nums.hs
+   -- other-modules:       
+   build-depends:      base     == 4.6.*
+                      ,HDBC >=2.3
+                      ,HDBC-sqlite3 >=2.3
+                      ,time
+                      ,old-locale
+                      ,ansi-terminal
+                      ,containers
+                      ,shell-escape
+                      ,bytestring
