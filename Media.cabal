@@ -14,8 +14,9 @@ cabal-version:       >=1.8
 
 
 executable media2
-  main-is:            Media.hs
-  -- other-modules:       
+  main-is:            MediaMain.hs
+  hs-source-dirs:     src
+  other-modules:      
   build-depends:      base     == 4.6.*
                      ,process
                      ,shell-escape
@@ -30,6 +31,7 @@ executable media2
                      
 executable histb
    main-is:            HistoryAdd.hs
+   hs-source-dirs:    src
    -- other-modules:       
    build-depends:      base     == 4.6.*
                       ,HDBC >=2.3
@@ -47,6 +49,7 @@ executable histb
                       ,process
 executable  nums2
    main-is:            Nums.hs
+   hs-source-dirs:    src
    -- other-modules:       
    build-depends:      base     == 4.6.*
                       ,HDBC >=2.3
@@ -60,6 +63,7 @@ executable  nums2
                       
 executable  numsf2
    main-is:            Numsf.hs
+   hs-source-dirs:    src
    -- other-modules:       
    build-depends:      base     == 4.6.*
                       ,HDBC >=2.3
@@ -73,6 +77,7 @@ executable  numsf2
                       
 executable  numss2
    main-is:            Numss.hs
+   hs-source-dirs:    src
    -- other-modules:       
    build-depends:      base     == 4.6.*
                       ,HDBC >=2.3
