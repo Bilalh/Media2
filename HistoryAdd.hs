@@ -3,6 +3,7 @@ import System.Environment(getArgs)
 import Data.Time.Format
 import Data.List.Split 
 import Data.Time.Clock
+import Data.Char
 
 import Media.History
 import Media.Types
@@ -19,7 +20,6 @@ path="/Users/bilalh/Movies/.Movies/Anime/"
 main = do
     args <- getArgs
     res <- processArgs  args
-    putStrLn $ show res
     return ()
 
 
@@ -32,7 +32,8 @@ processArgs l@(series:lowerNum:[])  =  do
     where lowerNum' = parseIntError lowerNum
 
 processArgs l@(series:lowerNum:date:[])  =  do
-        t <- parseDate date
+        t' <- parseDate date
+        t  <- toLocalTime t'
         res <- addToHistory series lowerNum'  (getTimeStamp  t)
         processExtra res series lowerNum'
         return res
@@ -42,7 +43,6 @@ processArgs _  = help
 
 processExtra :: Integer -> String -> Int ->  IO ()
 processExtra  1 series number = do
-    putStrLn series
     videos <- videosInfo path
     case M.lookup series videos of
         Nothing  ->  return ()
@@ -59,8 +59,6 @@ processExtra  1 series number = do
 processExtra _ _ _ = do
     return ()    
 
--- colour here
-
 addTime :: UTCTime -> Time -> UTCTime
 addTime utc time = let t =  timeToSeconds time
                        i =  fromInteger t :: Int
@@ -70,10 +68,11 @@ addTime utc time = let t =  timeToSeconds time
 parseDate :: String -> IO UTCTime
 parseDate timeStr=  do 
     now <- getCurrentTime
-    case parseTimeString now timeStr of 
-        Left _     -> return now 
+    case parseTimeString now (map (toLower) timeStr) of 
+        Left _     -> error $ "Could not parse " ++ timeStr
         Right time -> return $ addTime now time
-        
+
+
 parseIntError :: String -> Int
 parseIntError  num = case parseInt num of 
             Just d -> d
