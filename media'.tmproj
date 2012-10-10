@@ -31,12 +31,20 @@
 			<true/>
 			<key>subItems</key>
 			<dict>
-				<key>scripts</key>
+				<key>src</key>
 				<dict>
 					<key>isExpanded</key>
 					<true/>
 					<key>subItems</key>
-					<dict/>
+					<dict>
+						<key>Media</key>
+						<dict>
+							<key>isExpanded</key>
+							<true/>
+							<key>subItems</key>
+							<dict/>
+						</dict>
+					</dict>
 				</dict>
 			</dict>
 		</dict>

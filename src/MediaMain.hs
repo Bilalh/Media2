@@ -15,7 +15,7 @@ main = do
 
 play player = do
     selected <- selectVideosInfo path oldest
-    -- pid <- runCommand $ videoCommand player selected
+    pid <- runCommand $ videoCommand player selected
     t <- getCurrentTime
     addToHistory (series selected) (number selected)  (getTimeStamp  t)
     runCommand $ labelFile selected "orange"
