@@ -8,3 +8,8 @@ runtests:
 
 tests:
 	cabal configure --enable-tests && cabal build && time dist/build/spec/spec -s
+
+install:
+	cabal install
+	chmod +x scripts/*
+	cp scripts/* ~/bin
