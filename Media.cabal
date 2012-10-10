@@ -13,6 +13,26 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 
+test-suite spec
+  type:           exitcode-stdio-1.0
+  main-is:        Spec.hs
+  hs-source-dirs: src, test
+  build-depends:  base, hspec, HUnit
+                  ,process
+                  ,shell-escape
+                  ,bytestring
+                  ,ansi-terminal
+                  ,containers
+                  ,filepath
+                  ,directory
+                  ,HDBC >=2.3
+                  ,HDBC-sqlite3 >=2.3
+                  ,time
+                  ,old-locale
+                  ,bytestring
+                  ,parsec
+
+
 executable media2
   main-is:            MediaMain.hs
   hs-source-dirs:     src

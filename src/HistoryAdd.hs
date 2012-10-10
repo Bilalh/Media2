@@ -59,12 +59,6 @@ processExtra  1 series number = do
 processExtra _ _ _ = do
     return ()    
 
-addTime :: UTCTime -> Time -> UTCTime
-addTime utc time = let t =  timeToSeconds time
-                       i =  fromInteger t :: Int
-                       r = toEnum (i*1000000000000) :: NominalDiffTime in
-    addUTCTime (r) utc
-
 parseDate :: String -> IO UTCTime
 parseDate timeStr=  do 
     now <- getCurrentTime
