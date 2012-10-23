@@ -1,7 +1,7 @@
 import System.Environment(getArgs)
 
 import Data.Time.Format
-import Data.List.Split 
+import Data.List.Split
 import Data.Time.Clock
 import Data.Char
 
@@ -46,30 +46,30 @@ processExtra  1 series number = do
     videos <- videosInfo path
     case M.lookup series videos of
         Nothing  ->  return ()
-        Just arr ->  do 
+        Just arr ->  do
             let selected = filter (\(VideoInfo{number=n}) -> n == number) arr
-            case selected of 
+            case selected of
                 [x] -> do
                     runCommand $ labelFile (selected !! 0) "orange"
                     runCommand $ hideExtension (selected !! 0)
                     putStrLn $ "Labeled and hid Extension of " ++ show x
                     return ()
                 _   -> return ()
-    
-processExtra _ _ _ = do
-    return ()    
+
+processExtra _ _ _ =
+    return ()
 
 parseDate :: String -> IO UTCTime
-parseDate timeStr=  do 
+parseDate timeStr=  do
     now <- getCurrentTime
-    case parseTimeString now (map (toLower) timeStr) of 
+    case parseTimeString now (map toLower timeStr) of
         Left _     -> error $ "Could not parse " ++ timeStr
         Right time -> return $ addTime now time
 
 
 parseIntError :: String -> Int
-parseIntError  num = case parseInt num of 
+parseIntError  num = case parseInt num of
             Just d -> d
             Nothing -> help
 
-help = error "Help"
+help = error "histb Series lower_num [time]"

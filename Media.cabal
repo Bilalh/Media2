@@ -7,7 +7,7 @@ license:             Apache-2.0
 license-file:        LICENSE
 author:              Bilal Syed Hussain
 maintainer:          bhterra@gmail.com
--- copyright:           
+-- copyright:
 category:            System
 build-type:          Simple
 cabal-version:       >=1.8
@@ -36,7 +36,7 @@ test-suite spec
 executable media2
   main-is:            MediaMain.hs
   hs-source-dirs:     src
-  other-modules:      
+  other-modules:
   build-depends:      base     == 4.6.*
                      ,process
                      ,shell-escape
@@ -48,11 +48,11 @@ executable media2
                      ,HDBC >=2.3
                      ,HDBC-sqlite3 >=2.3
                      ,time
-                     
+
 executable histb
    main-is:            HistoryAdd.hs
    hs-source-dirs:    src
-   -- other-modules:       
+   -- other-modules:
    build-depends:      base     == 4.6.*
                       ,HDBC >=2.3
                       ,HDBC-sqlite3 >=2.3
@@ -70,7 +70,7 @@ executable histb
 executable  nums2
    main-is:            Nums.hs
    hs-source-dirs:    src
-   -- other-modules:       
+   -- other-modules:
    build-depends:      base     == 4.6.*
                       ,HDBC >=2.3
                       ,HDBC-sqlite3 >=2.3
@@ -80,11 +80,11 @@ executable  nums2
                       ,containers
                       ,shell-escape
                       ,bytestring
-                      
+
 executable  numsf2
    main-is:            Numsf.hs
    hs-source-dirs:    src
-   -- other-modules:       
+   -- other-modules:
    build-depends:      base     == 4.6.*
                       ,HDBC >=2.3
                       ,HDBC-sqlite3 >=2.3
@@ -94,11 +94,11 @@ executable  numsf2
                       ,containers
                       ,shell-escape
                       ,bytestring
-                      
+
 executable  numss2
    main-is:            Numss.hs
    hs-source-dirs:    src
-   -- other-modules:       
+   -- other-modules:
    build-depends:      base     == 4.6.*
                       ,HDBC >=2.3
                       ,HDBC-sqlite3 >=2.3

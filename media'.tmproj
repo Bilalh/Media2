@@ -16,7 +16,7 @@
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>210</integer>
+	<integer>177</integer>
 	<key>metaData</key>
 	<dict/>
 	<key>showFileHierarchyDrawer</key>
@@ -36,20 +36,12 @@
 					<key>isExpanded</key>
 					<true/>
 					<key>subItems</key>
-					<dict>
-						<key>Media</key>
-						<dict>
-							<key>isExpanded</key>
-							<true/>
-							<key>subItems</key>
-							<dict/>
-						</dict>
-					</dict>
+					<dict/>
 				</dict>
 			</dict>
 		</dict>
 	</dict>
 	<key>windowFrame</key>
-	<string>{{464, 57}, {899, 821}}</string>
+	<string>{{109, 57}, {899, 821}}</string>
 </dict>
 </plist>
