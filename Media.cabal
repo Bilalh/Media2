@@ -49,6 +49,22 @@ executable media2
                      ,HDBC-sqlite3 >=2.3
                      ,time
 
+executable mediaa2
+  main-is:            MediaAllMain.hs
+  hs-source-dirs:     src
+  other-modules:
+  build-depends:      base     == 4.6.*
+                     ,process
+                     ,shell-escape
+                     ,bytestring
+                     ,ansi-terminal
+                     ,containers
+                     ,filepath
+                     ,directory
+                     ,HDBC >=2.3
+                     ,HDBC-sqlite3 >=2.3
+                     ,time
+
 executable histb
    main-is:            HistoryAdd.hs
    hs-source-dirs:    src
@@ -67,6 +83,7 @@ executable histb
                       ,filepath
                       ,directory
                       ,process
+
 executable  nums2
    main-is:            Nums.hs
    hs-source-dirs:    src
