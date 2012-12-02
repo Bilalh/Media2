@@ -65,7 +65,7 @@ executable mediaa2
                      ,HDBC-sqlite3 >=2.3
                      ,time
 
-executable histb
+executable hista
    main-is:            HistoryAdd.hs
    hs-source-dirs:    src
    -- other-modules:
@@ -84,7 +84,7 @@ executable histb
                       ,directory
                       ,process
 
-executable  nums2
+executable  nums
    main-is:            Nums.hs
    hs-source-dirs:    src
    -- other-modules:
@@ -98,7 +98,7 @@ executable  nums2
                       ,shell-escape
                       ,bytestring
 
-executable  numsf2
+executable  numsf
    main-is:            Numsf.hs
    hs-source-dirs:    src
    -- other-modules:
@@ -112,7 +112,7 @@ executable  numsf2
                       ,shell-escape
                       ,bytestring
 
-executable  numss2
+executable  numss
    main-is:            Numss.hs
    hs-source-dirs:    src
    -- other-modules:
