@@ -136,7 +136,7 @@ parseName filename =
                        ("", revStr) -> (revStr, 1)
                        (num,revStr) -> (revStr, (read . reverse) num)
 
-    in VideoInfo (func revStr) 1 filename
+    in VideoInfo (func revStr) num filename
 
     where fix' =  dropWhile isPunctuation . dropWhile isSpace
           fix  =  dropWhile isSpace . fix'
