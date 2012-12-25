@@ -11,13 +11,13 @@ Media.Player	./src/Media/Player.hs	line:1
 Media.Time	./src/Media/Time.hs	line:1
 Media.TimeSpec	./test/Media/TimeSpec.hs	line:1
 Media.Types	./src/Media/Types.hs	line:1
-Missing	./src/Media/IO.hs	line:67
+Missing	./src/Media/IO.hs	line:68
 Paths_Media	./dist/build/autogen/Paths_Media.hs	line:1
 PlayerType	./src/Media/Player.hs	line:8
-Sequential	./src/Media/IO.hs	line:67
-SeriesKind	./src/Media/IO.hs	line:67
-Single	./src/Media/IO.hs	line:67
-SingleGap	./src/Media/IO.hs	line:67
+Sequential	./src/Media/IO.hs	line:68
+SeriesKind	./src/Media/IO.hs	line:68
+Single	./src/Media/IO.hs	line:68
+SingleGap	./src/Media/IO.hs	line:68
 TermSize	./src/TermSize.hs	line:5
 Terminal	./src/Terminal.hs	line:1
 Time	./src/Media/Time.hs	line:19
@@ -35,7 +35,7 @@ ampm	./src/Media/Time.hs	line:89
 bashEscape	./src/Media/Misc.hs	line:24
 bindir	./dist/build/autogen/Paths_Media.hs	line:18
 catchIO	./dist/build/autogen/Paths_Media.hs	line:12
-classify	./src/Media/IO.hs	line:69
+classify	./src/Media/IO.hs	line:70
 datadir	./dist/build/autogen/Paths_Media.hs	line:18
 day	./src/Media/Time.hs	line:148
 dayDiff	./src/Media/Time.hs	line:114
@@ -44,7 +44,7 @@ daysMap	./src/Media/Time.hs	line:137
 db	./src/Media/History.hs	line:16
 db	./src/Media/Info.hs	line:22
 esc	./src/Media/Player.hs	line:19
-ffind	./src/Media/IO.hs	line:136
+ffind	./src/Media/IO.hs	line:144
 filename	./src/Media/Types.hs	line:5
 findUnwatched	./src/Media/History.hs	line:31
 fromSql'	./src/Media/Info.hs	line:94
@@ -53,7 +53,7 @@ getDataDir	./dist/build/autogen/Paths_Media.hs	line:25
 getDataFileName	./dist/build/autogen/Paths_Media.hs	line:31
 getLibDir	./dist/build/autogen/Paths_Media.hs	line:25
 getLibexecDir	./dist/build/autogen/Paths_Media.hs	line:25
-getRecursiveContents	./src/Media/IO.hs	line:141
+getRecursiveContents	./src/Media/IO.hs	line:149
 getTermSize	./src/TermSize.hs	line:45
 getTimeStamp	./src/Media/Misc.hs	line:19
 getTitleLength	./src/Terminal.hs	line:5
@@ -64,7 +64,7 @@ hideExtension	./src/Media/History.hs	line:65
 hours	./src/Media/Time.hs	line:22
 inAfterTime	./src/Media/Time.hs	line:64
 inFunc	./src/Media/Time.hs	line:45
-inRange	./src/Media/IO.hs	line:153
+inRange	./src/Media/IO.hs	line:161
 instance	./src/Media/Time.hs	line:32
 instance	./src/TermSize.hs	line:24
 integer	./src/Media/Time.hs	line:41
@@ -87,9 +87,9 @@ minutes	./src/Media/Time.hs	line:21
 month	./src/Media/Time.hs	line:149
 namePart	./src/Media/Time.hs	line:76
 number	./src/Media/Types.hs	line:4
-nums	./src/Media/IO.hs	line:74
+nums	./src/Media/IO.hs	line:75
 nums	./src/Media/Info.hs	line:53
-numsLookUp	./src/Media/IO.hs	line:56
+numsLookUp	./src/Media/IO.hs	line:57
 nums_main	./src/Media/Info.hs	line:44
 oldest	./src/Media/IO.hs	line:92
 parseArgs	./src/Media/Info.hs	line:49
@@ -120,7 +120,7 @@ relDates	./src/Media/Time.hs	line:103
 s	./src/Media/Time.hs	line:153
 seconds	./src/Media/Time.hs	line:20
 selectVideosInfo	./src/Media/IO.hs	line:24
-selectVideosInfo'	./src/Media/IO.hs	line:29
+selectVideosInfo'	./src/Media/IO.hs	line:30
 series	./src/Media/Types.hs	line:3
 spec	./test/Media/TimeSpec.hs	line:29
 time'	./src/Media/Time.hs	line:36

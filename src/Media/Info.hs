@@ -41,6 +41,7 @@ queryLatestWithFinishedAndSkipped = "SELECT Title, Current, Total, Date, Finishe
 	\    strftime('%s',Date) > strftime('%s', 'now', ? ,'localtime') \
     \)"
 
+nums_main :: String -> IO ()
 nums_main query = do
     args <- getArgs
     let days =  parseArgs args
@@ -55,7 +56,7 @@ nums days query= do
     stmt <- prepare conn query
     a <- execute stmt [toSql days]
     rows <- fetchAllRows stmt
-    let rows' = map (map (\b -> fromSql' b))  rows
+    let rows' = map (map fromSql' )  rows
     printRows rows'
 
 printRows :: [[String]] -> IO ()

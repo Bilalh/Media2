@@ -120,25 +120,31 @@ toVideoMap  :: [VideoInfo] -> M.Map String [VideoInfo] -> M.Map String [VideoInf
 toVideoMap [] m      = m
 toVideoMap (x:xs) m  = toVideoMap xs $ case M.lookup (series x) m of
                          Nothing -> M.insert (series x) [x] m
-                         Just ls  -> M.insert (series x) (L.insert x ls) m
+                         Just ls -> M.insert (series x) (L.insert x ls) m
 
 -- Splits the filename into  (name, number, filepath)
 parseName :: FilePath ->  VideoInfo
 parseName filename =  
     let s = (reverse  . dropExtension . takeFileName) filename
+
         -- Remove episode name (if any)
         s' = case span (/= '|') s of
                (str, "") -> str
                (_,str)   -> (fix . tail)  str
 
+        (revStr,num) =  case span isDigit s' of
+                       ("", revStr) -> (revStr, 1)
+                       (num,revStr) -> (revStr, (read . reverse) num)
 
-    in case span isDigit s' of
-         ("", revStr) -> VideoInfo ( reverse  (fix revStr))  1 filename
-         (num,revStr) -> VideoInfo (reverse (fix revStr)) (read (reverse num)) filename
+    in VideoInfo (func revStr) 1 filename
 
-    where fix' =  dropWhile isPunctuation  . dropWhile isSpace
+    where fix' =  dropWhile isPunctuation . dropWhile isSpace
           fix  =  dropWhile isSpace . fix'
+          func =  map colonToSlash . dropWhile isSpace . reverse . fix
 
+          -- To be consistent with the GUI
+          colonToSlash ':' = '/'
+          colonToSlash  a  = a
 
 -- returns the name based on a function
 ffind :: (FilePath -> Bool) -> FilePath -> IO [FilePath]
