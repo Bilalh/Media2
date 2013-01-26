@@ -1,4 +1,4 @@
-name:                Media
+name:                Media2
 version:             0.2.0.0
 synopsis:            Video files classifier and player
 description:         Classifies videos files based on series and episode number and records which videos have been played in an sqlite3 database
@@ -6,7 +6,7 @@ homepage:            https://github.com/Bilalh
 license:             Apache-2.0
 license-file:        LICENSE
 author:              Bilal Syed Hussain
-maintainer:          bhterra@gmail.com
+maintainer:          bilalshussain@gmail.com
  --copyright:
 category:            System
 build-type:          Simple

@@ -11,6 +11,7 @@ import Control.Monad (forM_, forM)
 import System.Directory (doesDirectoryExist, getDirectoryContents)
 import System.FilePath ((</>), takeExtension, dropExtension, takeFileName)
 import System.IO (stdout, hFlush)
+import System.Exit(exitFailure)
 
 import Data.Maybe
 import Data.Char
@@ -35,24 +36,31 @@ selectVideosInfo' ffunc path func = do
 
     let nums' = M.mapWithKey classify' infos
     let res = zip ( M.elems . func $  infos) [0..]
-    forM_ res $ \(info,n) -> do
-        setSGR [ SetColor Foreground Vivid Green]
-        printf "%-2d"  (n :: Int)
-        setSGR [ SetColor Foreground Vivid White]
-        putStr " : P: "
-        setSGR [ SetColor Foreground Dull White]
-        let c = fromMaybe 0 (M.lookup  (series info) currents)
-        printf "%-2d " c
-        setSGR [ SetColor Foreground Vivid White]
-        putStr "N: "
-        let (colour,str)  = numsLookUp info nums'
-        setSGR [ SetColor Foreground Dull colour]
-        printf "%-5s " str
-        setSGR [ Reset]
-        printf "%6s %s\n" "" (series info)
-        return ()
-    index <- (pickEpPrompt . length) res
-    return . fst $ res !! index
+
+    case null res of
+        True -> do 
+            putStr "No matching Files\n"
+            exitFailure
+        False -> do 
+
+        forM_ res $ \(info,n) -> do
+            setSGR [ SetColor Foreground Vivid Green]
+            printf "%-2d"  (n :: Int)
+            setSGR [ SetColor Foreground Vivid White]
+            putStr " : P: "
+            setSGR [ SetColor Foreground Dull White]
+            let c = fromMaybe 0 (M.lookup  (series info) currents)
+            printf "%-2d " c
+            setSGR [ SetColor Foreground Vivid White]
+            putStr "N: "
+            let (colour,str)  = numsLookUp info nums'
+            setSGR [ SetColor Foreground Dull colour]
+            printf "%-5s " str
+            setSGR [ Reset]
+            printf "%6s %s\n" "" (series info)
+            return ()
+        index <- (pickEpPrompt . length) res
+        return . fst $ res !! index
 
 numsLookUp :: VideoInfo -> M.Map String (t, SeriesKind) -> (Color, t)
 numsLookUp info nums'=
