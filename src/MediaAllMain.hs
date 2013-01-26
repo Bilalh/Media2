@@ -17,21 +17,21 @@ path="/Users/bilalh/Movies/.Movies/Anime/"
 
 data VFilter = Oldest    | Latest deriving (Data, Typeable, Show)
 data FFilter = Unwatched | All    deriving (Data, Typeable, Show)
-data Opts = Opts {vFilter :: VFilter, fFilter :: FFilter, mPlayer :: PlayerType}
+data Media2 = Media2 {vFilter :: VFilter, fFilter :: FFilter, mPlayer :: PlayerType}
     deriving (Data, Typeable, Show)
 
 -- Categorise videos by series and presents a menu for playing them with a player
 main = do
     args <- getArgs
-    opts <- getOpts
+    opts <- cmdArgs $ getOpts
     _ <- play opts
     return ()
     -- return opts
 
 -- Parse the command line options
-getOpts :: IO Opts
-getOpts = cmdArgs $
-    Opts {
+getOpts :: Media2
+getOpts =
+    Media2 {
         vFilter = enum
             [ Oldest &= help "Prefer Older files (default)"
             , Latest &= help "Only play the newest file"
@@ -41,12 +41,15 @@ getOpts = cmdArgs $
             , All       &= help "Plays all files"
             ],
         mPlayer = enum
-            [ MPlayerOSX &= help "Use MPlayerOSX as the player (Deafult)"
-            , MPlayerX   &= help "Use MPlayerX as the player"
-            , MPlayer    &= help "Use MPlayer (command line) as the player"
-            , VLC        &= help "Use VLC as the player"
+            [ MPlayerOSX &= name "m"  &= help "Use MPlayerOSX as the player (Deafult)"
+            , MPlayerX   &= name "x"  &= help "Use MPlayerX as the player"
+            , MPlayer    &= name "M"  &= help "Use MPlayer (command line) as the player"
+            , VLC        &= name "v"  &= help "Use VLC as the player"
             ]
-        }
+        } &=
+        help "Categorise videos by series and presents a menu for playing." &=
+        summary "Media' v2.0 (C) Bilal Syed Hussain" 
+
 
 
 vfilterToFunc :: VFilter -> VideoFilter
@@ -57,8 +60,8 @@ ffilterToFunc :: FFilter -> FileFilter
 ffilterToFunc Unwatched = unwatched
 ffilterToFunc All       = allMedia
 
-play :: Opts -> IO ()
-play opts@(Opts{vFilter =vf, fFilter=ff, mPlayer=player}) = do
+play :: Media2 -> IO ()
+play opts@(Media2{vFilter =vf, fFilter=ff, mPlayer=player}) = do
     let vfilter = vfilterToFunc vf
         fFilter = ffilterToFunc ff
     selected <- selectVideosInfo' fFilter path vfilter
