@@ -20,7 +20,6 @@ import qualified Data.List as L
 import System.Console.ANSI
 import Text.Printf
 
-path="/Users/bilalh/Movies/.Movies/Anime/"
 
 selectVideosInfo :: FilePath -> VideoFilter ->  IO VideoInfo
 selectVideosInfo = selectVideosInfo' unwatched

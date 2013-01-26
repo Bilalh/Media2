@@ -8,12 +8,20 @@ import Media.Misc
 import Media.History
 import System.Process (runCommand)
 import System.Environment (getArgs)
+import System.Directory (getHomeDirectory,doesDirectoryExist)
+import System.FilePath ( (</>))
 
 import qualified Data.Map as M
 
 import System.Console.CmdArgs
 
-path="/Users/bilalh/Movies/.Movies/Anime/"
+defaultPath= do 
+    home <- getHomeDirectory
+    let movies = home </> "Movies"
+    b <-  doesDirectoryExist movies
+    let res = (if b then movies else home)
+    return res
+
 
 data VFilter = Oldest    | Latest deriving (Data, Typeable, Show)
 data FFilter = Unwatched | All    deriving (Data, Typeable, Show)
@@ -22,7 +30,8 @@ data Media2 = Media2 {
     vFilter :: VFilter, 
     fFilter :: FFilter, 
     vPlayer :: PlayerType,
-    history :: Bool
+    history :: Bool,
+    path    :: FilePath
     }
     deriving (Data, Typeable, Show)
 
@@ -30,14 +39,22 @@ data Media2 = Media2 {
 main = do
     args <- getArgs
     opts <- cmdArgs $ getOpts
-    _ <- play opts
-    return ()
-    -- return opts
+    opts' <- fillInOpts opts 
+    _ <- play opts'
+    -- return ()
+    return opts'
+
+fillInOpts :: Media2 -> IO Media2
+fillInOpts opts@(Media2{path=p} ) | p == ""  =do 
+    def <- defaultPath
+    return opts{path=def}
+
+fillInOpts m = return m
 
 -- Parse the command line options
 getOpts :: Media2
 getOpts =
-    Media2 {
+    Media2{
         vFilter = enum
             [ Oldest &= help "Prefer Older files (default)"
             , Latest &= help "Only play the newest file"
@@ -52,7 +69,8 @@ getOpts =
             , MPlayer    &= name "M"  &= help "Use MPlayer (command line) as the player"
             , VLC        &= name "v"  &= help "Use VLC as the player"
             ],
-        history = def   &= name "h" &= help "Add files to history"
+        history = def &= name "y" &= help "Add files to history",
+        path    = def &= name "p" &= help "Directory to look for files inculdes sub " &= typDir
         } &=
         program "media2" &=
         help "Categorise videos by series and presents a menu for playing." &=
@@ -71,10 +89,10 @@ ffilterToFunc All       = allMedia
 
 
 play :: Media2 -> IO ()
-play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player, history=h}) = do
+play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player, history=h, path=p}) = do
     let vfilter = vfilterToFunc vf
         fFilter = ffilterToFunc ff
-    selected <- selectVideosInfo' fFilter path vfilter
+    selected <- selectVideosInfo' fFilter p vfilter
     pid <- runCommand $ videoCommand player selected
     handleHistory h selected
     return ()

@@ -13,6 +13,7 @@ import Media.Misc
 import Database.HDBC.Sqlite3 (connectSqlite3)
 import Database.HDBC
 
+-- CHANGE this to the location of your sqlite3 database
 db    = "/Users/bilalh/Library/Application Support/Media/Media.db"
 unwatchedQuery = "SELECT current from SeriesData WHERE Title = replace(ltrim(?),':','/')"
 
