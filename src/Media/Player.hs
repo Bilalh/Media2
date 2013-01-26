@@ -1,11 +1,16 @@
+{-# LANGUAGE DeriveDataTypeable #-}
+
 module Media.Player (
   videoCommand, PlayerType(MPlayer,MPlayerOSX,MPlayerX,VLC)
 ) where
 
+import Data.Typeable
+import Data.Data
+
 import Media.Types 
 import Media.Misc
 
-data PlayerType = MPlayer | MPlayerOSX | MPlayerX | VLC deriving (Show)
+data PlayerType = MPlayer | MPlayerOSX | MPlayerX | VLC deriving (Show, Data, Typeable)
 
 
 --  command to run on the file

@@ -1,5 +1,6 @@
 module Media.IO
-( selectVideosInfo, selectVideosInfo', videosInfo, latest, oldest, SeriesKind(..)
+( selectVideosInfo, selectVideosInfo', videosInfo, latest, oldest, SeriesKind(..),
+    VideoFilter, FileFilter
 ) where
 
 import Media.Types
