@@ -67,13 +67,14 @@ getOpts =
             [ MPlayerOSX &= name "m"  &= help "Use MPlayerOSX as the player (Deafult)"
             , MPlayerX   &= name "x"  &= help "Use MPlayerX as the player"
             , MPlayer    &= name "M"  &= help "Use MPlayer (command line) as the player"
-            , VLC        &= name "v"  &= help "Use VLC as the player"
+            , MPV        &= name "v"  &= help "Use mpv (command line) as the player"
+            , VLC                     &= help "Use VLC as the player"
             ],
         history = def &= name "y" &= help "Add files to history",
-        path    = def &= name "p" &= help "Directory to look for files inculdes sub " &= typDir
+        path    = def &= name "p" &= help "Directory to look for files inculdes sub dirs " &= typDir
         } &=
         program "media2" &=
-        help "Categorise videos by series and presents a menu for playing." &=
+        help "Categorise videos by series and presents a menu for playing them." &=
         summary "Media' v2.0 (C) Bilal Syed Hussain" 
 
 
