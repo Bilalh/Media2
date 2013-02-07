@@ -82,13 +82,21 @@ ffilterToFunc :: FFilter -> FileFilter
 ffilterToFunc Unwatched = unwatched
 ffilterToFunc All       = allMedia
 
+getDefaultArgs :: PlayerType -> String
+getDefaultArgs MPlayer = defaultMplayerArgs
+getDefaultArgs MPV     = defaultMpvArgs
+getDefaultArgs MPV_App = defaultMpvArgs
+getDefaultArgs _       = ""
+
 
 play :: Media2 -> IO ()
 play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player, history=h, path=p, extraArgs=ea}) = do
     let vfilter = vfilterToFunc vf
         fFilter = ffilterToFunc ff
     selected <- selectVideosInfo' fFilter p vfilter
-    pid <- runCommand $ videoCommand player selected ea
+    let command = videoCommand player [filename selected] (getDefaultArgs player ++ " " ++ ea)
+    print command
+    pid <- runCommand $ command
     handleHistory h selected
     return ()
 
@@ -102,3 +110,4 @@ handleHistory True selected = do
     return ()
 
 handleHistory False _ = return ()
+

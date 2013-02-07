@@ -1,11 +1,14 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 
 module Media.Player (
-  videoCommand, PlayerType(..)
+  videoCommand, PlayerType(..),
+  defaultMplayerArgs,
+  defaultMpvArgs
 ) where
 
 import Data.Typeable
 import Data.Data
+import Data.List(foldl1')
 
 import Media.Types
 import Media.Misc
@@ -21,16 +24,16 @@ defaultMpvArgs     = defaultArgs ++ " -geometry 0%:100% --autofit=480 "
 
 --  command to run on the file
 --  CHANGE pipe to location of mplayer's pipe
-videoCommand ::  PlayerType -> VideoInfo -> String -> String
+videoCommand ::  PlayerType -> [FilePath] -> String -> String
 videoCommand MPlayer info extraArgs =
-    "mplayer "                      ++ defaultMplayerArgs ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
+    "mplayer "                        ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
 videoCommand MPV info extraArgs =
-    "mpv "                          ++ defaultMpvArgs     ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
+    "mpv "                            ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
 videoCommand MPV_App info extraArgs =
-    "open -a mpv --args "           ++ defaultMpvArgs     ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
+    "open -a mpv --args "             ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
 
 videoCommand MPlayerOSX info  _ =  "open -a 'MPlayer OSX Extended' --args " ++ esc info
 videoCommand MPlayerX   info  _ =  "open -a MPlayerX --args "               ++ esc info
 videoCommand VLC        info  _ =  "open -a VLC --args "                    ++ esc info
 
-esc info = bashEscape  (filename info)
+esc infos = foldl1' (\a b -> a ++ " " ++ b)  (map bashEscape infos)
