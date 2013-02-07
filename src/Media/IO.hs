@@ -1,6 +1,7 @@
 module Media.IO
-( selectVideosInfo, selectVideosInfo', videosInfo, latest, oldest, SeriesKind(..),
-    VideoFilter, FileFilter
+(   selectVideosInfo, selectVideosInfo', videosInfo, latest, oldest, SeriesKind(..),
+    VideoFilter, FileFilter, 
+    defaultPath, videos
 ) where
 
 import Media.Types
@@ -8,7 +9,7 @@ import Media.History
 
 import Data.List(isSuffixOf)
 import Control.Monad (forM_, forM)
-import System.Directory (doesDirectoryExist, getDirectoryContents)
+import System.Directory (doesDirectoryExist, getDirectoryContents, getHomeDirectory)
 import System.FilePath ((</>), takeExtension, dropExtension, takeFileName)
 import System.IO (stdout, hFlush)
 import System.Exit(exitFailure)
@@ -176,3 +177,11 @@ inRange :: Int ->  Int -> Int -> Bool
 inRange val lower upper
   | val >= lower && val < upper  = True
   | otherwise                    = False
+ 
+defaultPath= do 
+    home <- getHomeDirectory
+    let movies = home </> "Movies"
+    b <-  doesDirectoryExist movies
+    let res = (if b then movies else home)
+    return res
+
