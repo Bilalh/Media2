@@ -48,8 +48,8 @@ getOpts =
             ]
         ,path      = def &= name "p" &= help "Directory to look for files includes sub dirs " &= typDir
         ,extraArgs = def &= name "e" &= help "Extra args to pass to the player"
-        ,nodefault = def &= name "n" &= help "don't use default mpv args ( -geometry 0%:100% --autofit=480 --loop=inf) "
-        ,chapter   = def &= name "c" &= help ""
+        ,nodefault = def &= name "n" &= help "Don't use default mpv args ( -geometry 0%:100% --autofit=480 --loop=inf) "
+        ,chapter   = def &= name "c" &= help "Only play the specifed chapters"
         } &=
         versionArg [ignore] &=
         program "playlists" &=
