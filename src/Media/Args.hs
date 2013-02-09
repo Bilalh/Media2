@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveDataTypeable, GeneralizedNewtypeDeriving #-}
 module Media.Args where
 
+import Media.Player
 import Data.List(foldl1')
 
 import Text.Regex.TDFA
@@ -35,8 +36,7 @@ instance MpvArgs DefaultArgs where
 instance MpvArgs Start where
     mpvArgs ( Start a ) = " --start " ++ show a ++ " "
 
-inputArgs    = " -input file=/Users/bilalh/.mplayer/pipe -input conf=/Users/bilalh/.mpv/input_with_last_fm.conf -aspect 16:9 --shuffle "
-defaultmpvArgs  = " -geometry 0%:100% --autofit=480 --loop=inf"
+defaultmpvArgs  = "-aspect 16:9 --shuffle  -geometry 0%:100% --autofit=480 --loop=inf"
 
 filterPaths' :: [String] ->  [FilePath] -> [FilePath]
 filterPaths' = flip filterPaths

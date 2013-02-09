@@ -3,7 +3,8 @@
 module Media.Player (
   videoCommand, PlayerType(..),
   defaultMplayerArgs,
-  defaultMpvArgs
+  defaultMpvArgs,
+  inputArgs
 ) where
 
 import Data.Typeable
@@ -18,9 +19,9 @@ data PlayerType = MPlayer | MPlayerOSX | MPlayerX | VLC | MPV | MPV_App
 
 
 
-defaultArgs        =  "-input file=/Users/bilalh/.mplayer/pipe -input conf=/Users/bilalh/.mpv/input_no_enter.conf"
-defaultMplayerArgs = defaultArgs ++  "-geometry 0:0 -xy 480 -really-quiet "
-defaultMpvArgs     = defaultArgs ++ " -geometry 0%:100% --autofit=480 "
+inputArgs          = " -input file=/Users/bilalh/.mplayer/pipe -input conf=/Users/bilalh/.mpv/input_with_last_fm.conf "
+defaultMplayerArgs = inputArgs ++  "-geometry 0:0 -xy 480 -really-quiet "
+defaultMpvArgs     = inputArgs ++ " -geometry 0%:100% --autofit=480 "
 
 --  command to run on the file
 --  CHANGE pipe to location of mplayer's pipe

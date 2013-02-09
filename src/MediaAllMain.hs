@@ -21,12 +21,13 @@ data VFilter = Oldest    | Latest deriving (Data, Typeable, Show)
 data FFilter = Unwatched | All    deriving (Data, Typeable, Show)
 
 data Media2 = Media2
-    {vFilter   :: VFilter
-    ,fFilter   :: FFilter
-    ,vPlayer   :: PlayerType
-    ,history   :: Bool
-    ,path      :: FilePath
+    {vFilter    :: VFilter
+    ,fFilter    :: FFilter
+    ,vPlayer    :: PlayerType
+    ,history    :: Bool
+    ,path       :: FilePath
     ,extra_args :: [String]
+    ,default_   :: Bool
     ,filter_    :: [String]
     }
     deriving (Data, Typeable, Show)
@@ -62,6 +63,7 @@ getOpts =
         ,history    = def &= name "y" &= help "Add files to history"
         ,path       = def &= name "p" &= help "Directory to look for files includes sub dirs " &= typDir
         ,extra_args = def &= name "e" &= help "Extra args to pass to the player"
+        ,default_   = def &= name "d" &= help "Use default args for command line players"
         ,filter_    = def &= args     &= typ "regex"
         } &=
         versionArg [ignore] &=
@@ -86,20 +88,20 @@ ffilterToFunc Unwatched = unwatched
 ffilterToFunc All       = allMedia
 
 
-getDefaultArgs :: PlayerType -> String
-getDefaultArgs MPlayer = defaultMplayerArgs
-getDefaultArgs MPV     = defaultMpvArgs
-getDefaultArgs MPV_App = defaultMpvArgs
-getDefaultArgs _       = ""
+getDefaultArgs :: Bool ->  PlayerType -> String
+getDefaultArgs True MPlayer = defaultMplayerArgs
+getDefaultArgs True MPV     = defaultMpvArgs
+getDefaultArgs True MPV_App = defaultMpvArgs
+getDefaultArgs _ _          = ""
 
 
 play :: Media2 -> IO ()
 play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player,
-                  history=h, path=p, extra_args=ea, filter_=f}) = do
+                  history=h, path=p, extra_args=ea, filter_=f, default_=d}) = do
     let vfilter = vfilterToFunc vf
         fFilter = ffilterToFunc ff
     selected <- selectVideosInfo' (filterPaths' f) fFilter p vfilter
-    let args =  (getDefaultArgs player ++ " ") : ea
+    let args =  (getDefaultArgs d player ++ " ") : ea
     let command = videoCommand player [filename selected] (foldl' (\a b -> a ++ " " ++ b ) "" args)
     {-print command-}
     pid <- runCommand command

@@ -34,7 +34,7 @@ play opts@(Playlists2{vPlayer=player, path=p, extra_args=ea, filter_=f}) = do
    files  <- videos p
    let files2 = filterPaths files f
    let command = videoCommand player files2 args
-   print command
+   --print command
 
    pid <- runCommand command
    return ()
