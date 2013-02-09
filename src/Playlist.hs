@@ -1,24 +1,14 @@
-{-# LANGUAGE DeriveDataTypeable, GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DeriveDataTypeable  #-}
 
 import Media.IO
 import Media.Player
+import Media.Args
 
 import qualified Data.Map as M
-import Data.List(foldl1', foldl')
-import Data.Char(toLower)
-
-import Text.Regex.TDFA
+import Data.List(foldl')
 
 import System.Process (runCommand)
 import System.Console.CmdArgs
-
--- Regex matcher which allows specifying options
-(=~+) ::
-   ( RegexMaker regex compOpt execOpt source
-   , RegexContext regex source1 target )
-   => source1 -> (source, compOpt, execOpt) -> target
-source1 =~+ (source, compOpt, execOpt) = match (makeRegexOpts compOpt execOpt source) source1
-
 
 data Playlists2 = Playlists2
     {vPlayer    :: PlayerType
@@ -30,33 +20,6 @@ data Playlists2 = Playlists2
     ,filter_    :: [String]
     }
     deriving (Data, Typeable, Show)
-
--- To convert the flags such as chapter to a string
-class MpvArgs t where mpvArgs :: t -> String
-
-newtype Chapter     = Chapter  (Int,Int) deriving (Show, Read, Data, Typeable, Eq, Ord, Default)
-newtype DefaultArgs = DefaultArgs Bool   deriving (Show, Read, Data, Typeable, Eq, Ord, Default)
-newtype Start       = Start Int          deriving (Show, Read, Data, Typeable, Eq, Ord, Default)
-
-instance (MpvArgs t) => MpvArgs (Maybe t) where 
-    mpvArgs Nothing   = ""
-    mpvArgs (Just n)  = mpvArgs n
-
-instance MpvArgs Chapter where
-    mpvArgs ( Chapter (a,b) ) = " --chapter " ++ show a ++ "-" ++ show b ++ " "
-
-instance MpvArgs DefaultArgs where
-    mpvArgs (DefaultArgs True)  = inputArgs ++ defaultmpvArgs
-    mpvArgs (DefaultArgs False) = ""
-
-instance MpvArgs Start where
-    mpvArgs ( Start a ) = " --start " ++ show a ++ " "
-
-
-inputArgs    = " -input file=/Users/bilalh/.mplayer/pipe -input conf=/Users/bilalh/.mpv/input_with_last_fm.conf -aspect 16:9 --shuffle "
-defaultmpvArgs  = " -geometry 0%:100% --autofit=480 --loop=inf"
-
-
 
 main = do
    opts <- cmdArgs getOpts
@@ -77,16 +40,6 @@ play opts@(Playlists2{vPlayer=player, path=p, extra_args=ea, filter_=f}) = do
    return ()
 
    where args = foldl' (\a b -> a ++ " " ++ b ) "" ea
-
-
-filterPaths :: [FilePath] ->  [String] -> [FilePath]
-filterPaths  paths []  = paths
-filterPaths  paths ps  = filter (match patten) paths
-    where
-    patten = foldl1' (\a b -> a ++ ".*" ++ b )  ps
-
-    match patten str  = str =~+ (patten, defaultCompOpt{caseSensitive=False}, defaultExecOpt)
-
 
 getOpts :: Playlists2
 getOpts =
