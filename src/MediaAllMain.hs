@@ -35,14 +35,7 @@ main = do
     --print (show opts')
     return ()
 
-fillInOpts :: Media2 -> IO Media2
-fillInOpts opts@(Media2{path=p} ) | p == ""  =do 
-    def <- defaultPath
-    return opts{path=def}
 
-fillInOpts m = return m
-
--- Parse the command line options
 getOpts :: Media2
 getOpts =
     Media2{
@@ -55,7 +48,7 @@ getOpts =
             , All       &= help "Plays all files"
             ],
         vPlayer = enum
-            [ MPlayerOSX &= name "m"  &= help "Use MPlayerOSX as the player (Deafult)"
+            [ MPlayerOSX &= name "m"  &= help "Use MPlayerOSX as the player (Default)"
             , MPlayerX   &= name "x"  &= help "Use MPlayerX as the player"
             , MPlayer    &= name "M"  &= help "Use MPlayer (command line) as the player"
             , MPV        &= name "v"  &= help "Use mpv (command line) as the player"
@@ -63,7 +56,7 @@ getOpts =
             , VLC                     &= help "Use VLC as the player"
             ],
         history   = def &= name "y" &= help "Add files to history",
-        path      = def &= name "p" &= help "Directory to look for files inculdes sub dirs " &= typDir,
+        path      = def &= name "p" &= help "Directory to look for files includes sub dirs " &= typDir,
         extraArgs = def &= name "e" &= help "Extra args to pass to the player"
         } &=
         versionArg [ignore] &=
@@ -71,6 +64,12 @@ getOpts =
         help "Categorise videos by series and presents a menu for playing them." &=
         summary "Media' v2.0 (C) Bilal Syed Hussain" 
 
+fillInOpts :: Media2 -> IO Media2
+fillInOpts opts@(Media2{path=p} ) | p == ""  =do 
+    def <- defaultPath
+    return opts{path=def}
+
+fillInOpts m = return m
 
 
 vfilterToFunc :: VFilter -> VideoFilter
@@ -96,7 +95,7 @@ play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player, history=h, path=p, ex
     selected <- selectVideosInfo' fFilter p vfilter
     let command = videoCommand player [filename selected] (getDefaultArgs player ++ " " ++ ea)
     print command
-    pid <- runCommand $ command
+    pid <- runCommand command
     handleHistory h selected
     return ()
 

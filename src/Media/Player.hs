@@ -18,7 +18,7 @@ data PlayerType = MPlayer | MPlayerOSX | MPlayerX | VLC | MPV | MPV_App
 
 
 
-defaultArgs        =  "-input file=/Users/bilalh/.mplayer/pipe -input conf=input_no_enter.conf"
+defaultArgs        =  "-input file=/Users/bilalh/.mplayer/pipe -input conf=/Users/bilalh/.mpv/input_no_enter.conf"
 defaultMplayerArgs = defaultArgs ++  "-geometry 0:0 -xy 480 -really-quiet "
 defaultMpvArgs     = defaultArgs ++ " -geometry 0%:100% --autofit=480 "
 
@@ -28,7 +28,7 @@ videoCommand ::  PlayerType -> [FilePath] -> String -> String
 videoCommand MPlayer info extraArgs =
     "mplayer "                        ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
 videoCommand MPV info extraArgs =
-    "mpv "                            ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
+    "mpv "                            ++ extraArgs ++ " " ++ esc info  ++ " | tee /Users/bilalh/.mplayer/output"
 videoCommand MPV_App info extraArgs =
     "open -a mpv --args "             ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
 
@@ -36,4 +36,7 @@ videoCommand MPlayerOSX info  _ =  "open -a 'MPlayer OSX Extended' --args " ++ e
 videoCommand MPlayerX   info  _ =  "open -a MPlayerX --args "               ++ esc info
 videoCommand VLC        info  _ =  "open -a VLC --args "                    ++ esc info
 
+esc []  = error "No video files found!"
+--esc [x] = bashEscape x
+--esc infos = foldl1' (\a b -> a ++ " " ++ bashEscape b) infos
 esc infos = foldl1' (\a b -> a ++ " " ++ b)  (map bashEscape infos)
