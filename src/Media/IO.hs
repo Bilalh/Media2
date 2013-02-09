@@ -4,20 +4,22 @@ module Media.IO
     defaultPath, videos
 ) where
 
-import Media.Types
 import Media.History
+import Media.Types
 
-import Data.List(isSuffixOf)
 import Control.Monad (forM_, forM)
+
+import Data.Char
+import Data.List(isSuffixOf)
+import Data.Maybe
+import qualified Data.List as L
+import qualified Data.Map as M
+
 import System.Directory (doesDirectoryExist, getDirectoryContents, getHomeDirectory)
+import System.Exit(exitFailure)
 import System.FilePath ((</>), takeExtension, dropExtension, takeFileName)
 import System.IO (stdout, hFlush)
-import System.Exit(exitFailure)
 
-import Data.Maybe
-import Data.Char
-import qualified Data.Map as M
-import qualified Data.List as L
 
 import System.Console.ANSI
 import Text.Printf
@@ -32,8 +34,8 @@ selectVideosInfo = selectVideosInfo' id
 
 selectVideosInfo' :: FileSelector -> FileFilter -> FilePath -> VideoFilter ->  IO VideoInfo
 selectVideosInfo' fsel ffunc path func = do
-    paths <- videos path 
-    _infos <- videosInfo (fsel paths)
+    paths <- videos path >>= return . fsel
+    _infos <- videosInfo paths
     (infos,currents) <- findUnwatched ffunc _infos
     let classify' = classify currents
 
@@ -114,7 +116,7 @@ pickEpPrompt upper = do
 
 
 videosInfo :: [FilePath] -> IO (M.Map String [VideoInfo])
-videosInfo paths = do
+videosInfo paths = 
    return $ toVideoMap (map parseName paths) M.empty
 
 videos :: FilePath -> IO [FilePath]
@@ -183,6 +185,6 @@ defaultPath= do
     home <- getHomeDirectory
     let movies = home </> "Movies"
     b <-  doesDirectoryExist movies
-    let res = (if b then movies else home)
+    let res = if b then movies else home
     return res
 
