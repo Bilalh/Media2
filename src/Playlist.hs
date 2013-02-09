@@ -4,7 +4,7 @@ import Media.IO
 import Media.Player
 
 import qualified Data.Map as M
-import Data.List(foldl1')
+import Data.List(foldl1', foldl')
 import Data.Char(toLower)
 
 import Text.Regex.TDFA
@@ -22,7 +22,7 @@ source1 =~+ (source, compOpt, execOpt)
 data Playlists2 = Playlists2
     {vPlayer   :: PlayerType
     ,path      :: FilePath
-    ,extraArgs :: String
+    ,extraArgs :: [String]
     ,no_default :: Bool
     ,chapter   :: Maybe ((Int,Int))
     ,filter_    :: [String]
@@ -45,7 +45,8 @@ play :: Playlists2 -> IO ()
 play opts@(Playlists2{vPlayer=player, path=p, extraArgs=ea, filter_=f}) = do
    files  <- videos p
    let files2 = filterPaths files f
-   let command = videoCommand (player) files2 ea
+   let command = videoCommand (player) files2 (foldl' (++) "" ea)
+   print (foldl' (\a b -> a ++ " " ++ b ) "" ea)
    --print command
 
    pid <- runCommand command
@@ -84,13 +85,13 @@ getOpts =
 
 processChapter :: Playlists2 -> Playlists2
 processChapter args@(Playlists2{chapter=Just (a,b), extraArgs=ea})  =
-    args{extraArgs=" --chapter " ++ (show a) ++ "-" ++ (show b) ++ " " ++ ea}
+    args{extraArgs= (" --chapter " ++ (show a) ++ "-" ++ (show b) ++ " ") : ea}
 
 processChapter args = args
 
 processNodefault :: Playlists2 -> Playlists2
 processNodefault args@(Playlists2{no_default=False, extraArgs=ea})  =
-    args{extraArgs=playlistArgs ++ argss ++ ea}
+    args{extraArgs=(playlistArgs ++ argss)  :ea}
 
 processNodefault args = args
 
