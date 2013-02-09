@@ -28,7 +28,7 @@ videoCommand ::  PlayerType -> [FilePath] -> String -> String
 videoCommand MPlayer info extraArgs =
     "mplayer "                        ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
 videoCommand MPV info extraArgs =
-    "mpv "                            ++ extraArgs ++ " " ++ esc info  ++ " | tee /Users/bilalh/.mplayer/output"
+    "mpv "                            ++ extraArgs ++ " " ++ esc info ++ " > /Users/bilalh/.mplayer/output"
 videoCommand MPV_App info extraArgs =
     "open -a mpv --args "             ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
 
