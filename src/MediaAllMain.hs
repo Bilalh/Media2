@@ -1,15 +1,17 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 
-import Data.Time.Clock
 import Media.IO
 import Media.Player
 import Media.Types
 import Media.Misc
 import Media.History
-import System.Process (runCommand)
-import System.Environment (getArgs)
 
+import Data.Time.Clock
+import Data.List(foldl')
 import qualified Data.Map as M
+
+import System.Environment (getArgs)
+import System.Process (runCommand)
 
 import System.Console.CmdArgs
 
@@ -23,16 +25,16 @@ data Media2 = Media2 {
     vPlayer   :: PlayerType,
     history   :: Bool,
     path      :: FilePath,
-    extraArgs :: String
+    extra_args :: [String]
     }
     deriving (Data, Typeable, Show)
 
 -- Categorise videos by series and presents a menu for playing them with a player
 main = do
     opts <- cmdArgs $ getOpts
+    print opts
     opts' <- fillInOpts opts 
     _ <- play opts'
-    --print (show opts')
     return ()
 
 
@@ -55,9 +57,9 @@ getOpts =
             , MPV_App    &= name "V"  &= help "Use mpv (app) as the player"
             , VLC                     &= help "Use VLC as the player"
             ],
-        history   = def &= name "y" &= help "Add files to history",
-        path      = def &= name "p" &= help "Directory to look for files includes sub dirs " &= typDir,
-        extraArgs = def &= name "e" &= help "Extra args to pass to the player"
+        history    = def &= name "y" &= help "Add files to history",
+        path       = def &= name "p" &= help "Directory to look for files includes sub dirs " &= typDir,
+        extra_args = def &= name "e" &= help "Extra args to pass to the player"
         } &=
         versionArg [ignore] &=
         program "media2" &=
@@ -89,12 +91,13 @@ getDefaultArgs _       = ""
 
 
 play :: Media2 -> IO ()
-play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player, history=h, path=p, extraArgs=ea}) = do
+play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player, history=h, path=p, extra_args=ea}) = do
     let vfilter = vfilterToFunc vf
         fFilter = ffilterToFunc ff
     selected <- selectVideosInfo' fFilter p vfilter
-    let command = videoCommand player [filename selected] (getDefaultArgs player ++ " " ++ ea)
-    print command
+    let args =  (getDefaultArgs player ++ " ") : ea
+    let command = videoCommand player [filename selected] (foldl' (\a b -> a ++ " " ++ b ) "" args)
+    {-print command-}
     pid <- runCommand command
     handleHistory h selected
     return ()
