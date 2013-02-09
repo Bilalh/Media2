@@ -48,6 +48,7 @@ executable playlists
                      ,HDBC-sqlite3 >=2.3
                      ,time
                      ,cmdargs
+                     ,regex-tdfa
 
 
 executable media2

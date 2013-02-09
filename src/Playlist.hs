@@ -4,21 +4,34 @@ import Media.IO
 import Media.Player
 
 import qualified Data.Map as M
+import Data.List(foldl1')
+import Data.Char(toLower)
+
+import Text.Regex.TDFA
 
 import System.Process (runCommand)
 import System.Console.CmdArgs
 
-data Playlists2 = Playlists2 {
-    vPlayer   :: PlayerType,
-    path      :: FilePath,
-    extraArgs :: String,
-    nodefault :: Bool,
-    chapter   :: Maybe ((Int,Int))
+(=~+) ::
+   ( RegexMaker regex compOpt execOpt source
+   , RegexContext regex source1 target )
+   => source1 -> (source, compOpt, execOpt) -> target
+source1 =~+ (source, compOpt, execOpt)
+  = match (makeRegexOpts compOpt execOpt source) source1
+
+data Playlists2 = Playlists2
+    {vPlayer   :: PlayerType
+    ,path      :: FilePath
+    ,extraArgs :: String
+    ,no_default :: Bool
+    ,chapter   :: Maybe ((Int,Int))
+    ,filter_    :: [String]
     }
     deriving (Data, Typeable, Show)
 
 playlistArgs = " -input file=/Users/bilalh/.mplayer/pipe -input conf=/Users/bilalh/.mpv/input_with_last_fm.conf -aspect 16:9 --shuffle "
 argss        = " -geometry 0%:100% --autofit=480 --loop=inf"
+
 
 main = do
    opts <- cmdArgs $ getOpts
@@ -27,47 +40,59 @@ main = do
    play (processChapter $ processNodefault opts')
    return ()
 
-play :: Playlists2 -> IO ()
-play opts@(Playlists2{vPlayer=player, path=p, extraArgs=ea}) = do
-   files <- videos p
 
-   let command = videoCommand (player) files ea
-   print command
+play :: Playlists2 -> IO ()
+play opts@(Playlists2{vPlayer=player, path=p, extraArgs=ea, filter_=f}) = do
+   files  <- videos p
+   let files2 = filterPaths files f
+   let command = videoCommand (player) files2 ea
+   --print command
 
    pid <- runCommand command
    return ()
 
 
+filterPaths :: [FilePath] ->  [String] -> [FilePath]
+filterPaths  paths []  = paths
+filterPaths  paths ps  = filter (match patten) paths
+
+    where
+    patten = foldl1' (\a b -> a ++ ".*" ++ b ) $ ps
+
+    match patten str  = str =~+ (patten, defaultCompOpt{caseSensitive=False}, defaultExecOpt)  :: Bool
+
+
 getOpts :: Playlists2
 getOpts =
     Playlists2{
-        vPlayer = enum 
+        vPlayer = enum
             [ MPV        &= name "v"  &= help "Use mpv (command line) as the player (Default)"
             , MPV_App    &= name "V"  &= help "Use mpv (app) as the player"
             , MPlayer    &= name "M"  &= help "Use MPlayer (command line) as the player"
             ]
-        ,path      = def &= name "p" &= help "Directory to look for files includes sub dirs " &= typDir
-        ,extraArgs = def &= name "e" &= help "Extra args to pass to the player"
-        ,nodefault = def &= name "n" &= help "Don't use default mpv args ( -geometry 0%:100% --autofit=480 --loop=inf) "
-        ,chapter   = def &= name "c" &= help "Only play the specifed chapters"
+        ,path       = def &= name "p" &= help "Directory to look for files includes sub dirs " &= typDir
+        ,extraArgs  = def &= name "e" &= help "Extra args to pass to the player"
+        ,no_default = def &= name "n" &= help "Don't use default mpv args ( -geometry 0%:100% --autofit=480 --loop=inf) "
+        ,chapter    = def &= name "c" &= help "Only play the specifed chapters"
+        ,filter_    = def &= args &= typ "regex"
         } &=
         versionArg [ignore] &=
         program "playlists" &=
         help "Plays all videos in the specified directory including sub-directories" &=
-        summary "part of Media' v2.0 (C) Bilal Syed Hussain"
+        summary "playlists, part of Media' v2.0 (C) Bilal Syed Hussain"
 
 
 processChapter :: Playlists2 -> Playlists2
-processChapter args@(Playlists2{chapter=Just (a,b), extraArgs=ea})  = 
+processChapter args@(Playlists2{chapter=Just (a,b), extraArgs=ea})  =
     args{extraArgs=" --chapter " ++ (show a) ++ "-" ++ (show b) ++ " " ++ ea}
 
 processChapter args = args
 
 processNodefault :: Playlists2 -> Playlists2
-processNodefault args@(Playlists2{nodefault=False, extraArgs=ea})  = 
+processNodefault args@(Playlists2{no_default=False, extraArgs=ea})  =
     args{extraArgs=playlistArgs ++ argss ++ ea}
 
-processNodefault args = args 
+processNodefault args = args
 
 fillInOpts :: Playlists2 -> IO Playlists2
 fillInOpts opts@(Playlists2{path=p} ) | p == ""  =do
