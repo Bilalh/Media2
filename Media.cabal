@@ -32,6 +32,23 @@ test-suite spec
                   ,bytestring
                   ,parsec
 
+executable playlists 
+  main-is:            playlist.hs
+  hs-source-dirs:     src
+  other-modules:
+  build-depends:      base     == 4.6.*
+                     ,process
+                     ,shell-escape
+                     ,bytestring
+                     ,ansi-terminal
+                     ,containers
+                     ,filepath
+                     ,directory
+                     ,HDBC >=2.3
+                     ,HDBC-sqlite3 >=2.3
+                     ,time
+                     ,cmdargs
+
 
 executable media2
   main-is:            MediaAllMain.hs
