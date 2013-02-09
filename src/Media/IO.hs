@@ -1,5 +1,5 @@
 module Media.IO
-(   selectVideosInfo, selectVideosInfo', videosInfo, latest, oldest, SeriesKind(..),
+(   selectVideosInfo,selectVideosInfo', videosInfo, latest, oldest, SeriesKind(..),
     VideoFilter, FileFilter, 
     defaultPath, videos
 ) where
@@ -23,15 +23,17 @@ import System.Console.ANSI
 import Text.Printf
 
 
-selectVideosInfo :: FilePath -> VideoFilter ->  IO VideoInfo
-selectVideosInfo = selectVideosInfo' unwatched
+type VideoFilter  = (M.Map String [VideoInfo] -> M.Map String VideoInfo)
+type FileFilter   = (M.Map String Int -> [VideoInfo] -> [VideoInfo])
+type FileSelector = ([FilePath] -> [FilePath])
 
-type VideoFilter = (M.Map String [VideoInfo] -> M.Map String VideoInfo)
-type FileFilter  = (M.Map String Int -> [VideoInfo] -> [VideoInfo])
+selectVideosInfo :: FileFilter -> FilePath -> VideoFilter ->  IO VideoInfo
+selectVideosInfo = selectVideosInfo' id
 
-selectVideosInfo' :: FileFilter -> FilePath -> VideoFilter ->  IO VideoInfo
-selectVideosInfo' ffunc path func = do
-    _infos <- videosInfo path
+selectVideosInfo' :: FileSelector -> FileFilter -> FilePath -> VideoFilter ->  IO VideoInfo
+selectVideosInfo' fsel ffunc path func = do
+    paths <- videos path 
+    _infos <- videosInfo (fsel paths)
     (infos,currents) <- findUnwatched ffunc _infos
     let classify' = classify currents
 
@@ -111,10 +113,9 @@ pickEpPrompt upper = do
       _ -> pickEpPrompt upper
 
 
-videosInfo :: FilePath -> IO (M.Map String [VideoInfo])
-videosInfo path = do
-   names <- videos path
-   return $ toVideoMap (map parseName names) M.empty
+videosInfo :: [FilePath] -> IO (M.Map String [VideoInfo])
+videosInfo paths = do
+   return $ toVideoMap (map parseName paths) M.empty
 
 videos :: FilePath -> IO [FilePath]
 videos =  ffind  vaildVideoExts

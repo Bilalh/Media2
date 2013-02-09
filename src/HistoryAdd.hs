@@ -43,7 +43,7 @@ processArgs _  = help
 
 processExtra :: Integer -> String -> Int ->  IO ()
 processExtra  1 series number = do
-    videos <- videosInfo path
+    videos <- (videos path) >>= videosInfo 
     case M.lookup series videos of
         Nothing  ->  return ()
         Just arr ->  do

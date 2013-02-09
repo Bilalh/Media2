@@ -5,6 +5,7 @@ import Media.Player
 import Media.Types
 import Media.Misc
 import Media.History
+import Media.Args
 
 import Data.Time.Clock
 import Data.List(foldl')
@@ -19,21 +20,22 @@ import System.Console.CmdArgs
 data VFilter = Oldest    | Latest deriving (Data, Typeable, Show)
 data FFilter = Unwatched | All    deriving (Data, Typeable, Show)
 
-data Media2 = Media2 {
-    vFilter   :: VFilter,
-    fFilter   :: FFilter,
-    vPlayer   :: PlayerType,
-    history   :: Bool,
-    path      :: FilePath,
-    extra_args :: [String]
+data Media2 = Media2
+    {vFilter   :: VFilter
+    ,fFilter   :: FFilter
+    ,vPlayer   :: PlayerType
+    ,history   :: Bool
+    ,path      :: FilePath
+    ,extra_args :: [String]
+    ,filter_    :: [String]
     }
     deriving (Data, Typeable, Show)
 
 -- Categorise videos by series and presents a menu for playing them with a player
 main = do
-    opts <- cmdArgs $ getOpts
+    opts <- cmdArgs getOpts
     print opts
-    opts' <- fillInOpts opts 
+    opts' <- fillInOpts opts
     _ <- play opts'
     return ()
 
@@ -56,18 +58,19 @@ getOpts =
             , MPV        &= name "v"  &= help "Use mpv (command line) as the player"
             , MPV_App    &= name "V"  &= help "Use mpv (app) as the player"
             , VLC                     &= help "Use VLC as the player"
-            ],
-        history    = def &= name "y" &= help "Add files to history",
-        path       = def &= name "p" &= help "Directory to look for files includes sub dirs " &= typDir,
-        extra_args = def &= name "e" &= help "Extra args to pass to the player"
+            ]
+        ,history    = def &= name "y" &= help "Add files to history"
+        ,path       = def &= name "p" &= help "Directory to look for files includes sub dirs " &= typDir
+        ,extra_args = def &= name "e" &= help "Extra args to pass to the player"
+        ,filter_    = def &= args     &= typ "regex"
         } &=
         versionArg [ignore] &=
         program "media2" &=
         help "Categorise videos by series and presents a menu for playing them." &=
-        summary "Media' v2.0 (C) Bilal Syed Hussain" 
+        summary "Media' v2.0 (C) Bilal Syed Hussain"
 
 fillInOpts :: Media2 -> IO Media2
-fillInOpts opts@(Media2{path=p} ) | p == ""  =do 
+fillInOpts opts@(Media2{path=p} ) | p == ""  =do
     def <- defaultPath
     return opts{path=def}
 
@@ -78,10 +81,10 @@ vfilterToFunc :: VFilter -> VideoFilter
 vfilterToFunc Oldest = oldest
 vfilterToFunc Latest = latest
 
-
 ffilterToFunc :: FFilter -> FileFilter
 ffilterToFunc Unwatched = unwatched
 ffilterToFunc All       = allMedia
+
 
 getDefaultArgs :: PlayerType -> String
 getDefaultArgs MPlayer = defaultMplayerArgs
@@ -91,10 +94,11 @@ getDefaultArgs _       = ""
 
 
 play :: Media2 -> IO ()
-play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player, history=h, path=p, extra_args=ea}) = do
+play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player,
+                  history=h, path=p, extra_args=ea, filter_=f}) = do
     let vfilter = vfilterToFunc vf
         fFilter = ffilterToFunc ff
-    selected <- selectVideosInfo' fFilter p vfilter
+    selected <- selectVideosInfo' (filterPaths' f) fFilter p vfilter
     let args =  (getDefaultArgs player ++ " ") : ea
     let command = videoCommand player [filename selected] (foldl' (\a b -> a ++ " " ++ b ) "" args)
     {-print command-}
