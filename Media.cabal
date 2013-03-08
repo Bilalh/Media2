@@ -51,6 +51,38 @@ executable playlists
                      ,regex-tdfa
 
 
+executable nextEpisode
+  main-is:            PlayNextEpisode.hs
+  hs-source-dirs:     src
+  other-modules:
+  build-depends:      base     == 4.6.*
+                     ,process
+                     ,shell-escape
+                     ,bytestring
+                     ,ansi-terminal
+                     ,containers
+                     ,filepath
+                     ,directory
+                     ,HDBC >=2.3
+                     ,HDBC-sqlite3 >=2.3
+                     ,time
+                     ,cmdargs
+                     ,regex-tdfa
+  ghc-prof-options:
+      -auto-all
+      -caf-all
+  ghc-options:
+      -fwarn-incomplete-patterns
+      -fwarn-missing-signatures
+      -fwarn-name-shadowing
+      -fwarn-orphans
+      -fwarn-overlapping-patterns
+      -fwarn-tabs
+      -fwarn-unused-do-bind
+      -fwarn-unused-matches
+      -Wall
+      -fno-warn-unused-do-bind
+
 executable media2
   main-is:            MediaAllMain.hs
   hs-source-dirs:     src
@@ -68,7 +100,19 @@ executable media2
                      ,time
                      ,cmdargs
                      ,regex-tdfa
-
+  ghc-prof-options:
+      -auto-all
+      -caf-all
+  ghc-options:
+      -fwarn-incomplete-patterns
+      -fwarn-missing-signatures
+      -fwarn-name-shadowing
+      -fwarn-orphans
+      -fwarn-overlapping-patterns
+      -fwarn-tabs
+      -fwarn-unused-matches
+      -Wall
+      -fno-warn-unused-do-bind
 
 executable hista
    main-is:            HistoryAdd.hs
@@ -88,6 +132,19 @@ executable hista
                       ,filepath
                       ,directory
                       ,process
+  ghc-prof-options:
+      -auto-all
+      -caf-all
+  ghc-options:
+      -fwarn-incomplete-patterns
+      -fwarn-missing-signatures
+      -fwarn-name-shadowing
+      -fwarn-orphans
+      -fwarn-overlapping-patterns
+      -fwarn-tabs
+      -fwarn-unused-matches
+      -Wall
+      -fno-warn-unused-do-bind
 
 executable  nums
    main-is:            Nums.hs
@@ -102,6 +159,19 @@ executable  nums
                       ,containers
                       ,shell-escape
                       ,bytestring
+  ghc-prof-options:
+      -auto-all
+      -caf-all
+  ghc-options:
+      -fwarn-incomplete-patterns
+      -fwarn-missing-signatures
+      -fwarn-name-shadowing
+      -fwarn-orphans
+      -fwarn-overlapping-patterns
+      -fwarn-tabs
+      -fwarn-unused-matches
+      -Wall
+      -fno-warn-unused-do-bind
 
 executable  numsf
    main-is:            Numsf.hs

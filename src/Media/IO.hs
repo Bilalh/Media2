@@ -1,7 +1,8 @@
 module Media.IO
 (   selectVideosInfo,selectVideosInfo', videosInfo, latest, oldest, SeriesKind(..),
     VideoFilter, FileFilter, 
-    defaultPath, videos
+    defaultPath, videos,
+    parseName, getVideosInfo
 ) where
 
 import Media.History
@@ -29,6 +30,17 @@ type VideoFilter  = (M.Map String [VideoInfo] -> M.Map String VideoInfo)
 type FileFilter   = (M.Map String Int -> [VideoInfo] -> [VideoInfo])
 type FileSelector = ([FilePath] -> [FilePath])
 
+getVideosInfo :: FileSelector -> FileFilter -> FilePath ->  IO [VideoInfo]
+getVideosInfo fsel ffunc path = do
+    paths <- videos path >>= return . fsel
+    _infos <- videosInfo paths
+    (infos,currents) <- findUnwatched ffunc _infos
+    let classify' = classify currents
+
+    let nums' = M.mapWithKey classify' infos
+        res =  M.elems  $ infos
+    return $ concat res
+
 selectVideosInfo :: FileFilter -> FilePath -> VideoFilter ->  IO VideoInfo
 selectVideosInfo = selectVideosInfo' id
 
@@ -40,7 +52,8 @@ selectVideosInfo' fsel ffunc path func = do
     let classify' = classify currents
 
     let nums' = M.mapWithKey classify' infos
-    let res = zip ( M.elems . func $  infos) [0..]
+        temp =  M.elems . func $  infos
+    let res = zip temp [0..]
 
     case null res of
         True -> do 
@@ -124,7 +137,7 @@ videos =  ffind  vaildVideoExts
 
 vaildVideoExts :: String -> Bool
 vaildVideoExts name = not  (isSuffixOf "OCC" $ dropExtension name)
-                     && any func [".mkv", ".mp4", ".avi",".webm"]
+                     && any func [".mkv", ".mp4", ".avi",".webm", ".flv"]
                      where func allowed = allowed == takeExtension name
 
 --  Create a map categorised by series

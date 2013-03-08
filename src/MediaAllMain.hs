@@ -103,7 +103,7 @@ play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player,
     selected <- selectVideosInfo' (filterPaths' f) fFilter p vfilter
     let args =  (getDefaultArgs d player ++ " ") : ea
     let command = videoCommand player [filename selected] (foldl' (\a b -> a ++ " " ++ b ) "" args)
-    {-print command-}
+    print command
     pid <- runCommand command
     handleHistory h selected
     return ()
