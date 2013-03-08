@@ -1,3 +1,3 @@
 import Media.Info
 
-main = nums_main queryLatestWithFinishedAndSkipped
+main = nums_main queryLatestWithSkipped

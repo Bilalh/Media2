@@ -19,7 +19,7 @@ data PlayerType = MPlayer | MPlayerOSX | MPlayerX | VLC | MPV | MPV_App
 
 
 
-inputArgs          = " -input file=/Users/bilalh/.mplayer/pipe -input conf=/Users/bilalh/.mpv/input_with_last_fm.conf "
+inputArgs          = " -input file=/Users/bilalh/.mplayer/pipe -input conf=/Users/bilalh/.mpv/input_no_enter.conf"
 defaultMplayerArgs = inputArgs ++  "-geometry 0:0 -xy 480 -really-quiet "
 defaultMpvArgs     = inputArgs ++ " -geometry 0%:100% --autofit=480 "
 
@@ -27,7 +27,7 @@ defaultMpvArgs     = inputArgs ++ " -geometry 0%:100% --autofit=480 "
 --  CHANGE pipe to location of mplayer's pipe
 videoCommand ::  PlayerType -> [FilePath] -> String -> String
 videoCommand MPlayer info extraArgs =
-    "mplayer "                        ++ extraArgs ++ " " ++ esc info ++ " &> /dev/null"
+    "mplayer "                        ++ extraArgs ++ " " ++ esc info ++ " > /Users/bilalh/.mplayer/output"
 videoCommand MPV info extraArgs =
     "mpv "                            ++ extraArgs ++ " " ++ esc info ++ " > /Users/bilalh/.mplayer/output"
 videoCommand MPV_App info extraArgs =

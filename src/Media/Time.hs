@@ -179,3 +179,6 @@ toLocalTime t  = do
     tz <- getCurrentTimeZone
     let b = utcToLocalTime utc t
     return $ localTimeToUTC tz  b
+
+-- see http://hackage.haskell.org/package/dates
+-- parseDate  (DateTime 2012 2 9 21 21 0) "last monday"

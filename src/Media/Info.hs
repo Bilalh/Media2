@@ -1,5 +1,8 @@
 module Media.Info (
-    nums_main, queryLatest, queryLatestWithFinished, queryLatestWithFinishedAndSkipped
+    nums_main, queryLatest, 
+    queryLatestWithFinished, 
+    queryLatestWithFinishedAndSkipped,
+    queryLatestWithSkipped
 ) where
 
 import Data.Time.Clock
@@ -39,6 +42,13 @@ queryLatestWithFinishedAndSkipped = "SELECT Title, Current, Total, Date, Finishe
     \FROM SeriesData \
     \WHERE( \
 	\    strftime('%s',Date) > strftime('%s', 'now', ? ,'localtime') \
+    \)"
+
+queryLatestWithSkipped = "SELECT Title, Current, Total, Date, Finished, Rewatching, Dropped \
+    \FROM SeriesData \
+    \WHERE( \
+	\    strftime('%s',Date) > strftime('%s', 'now', ? ,'localtime') \
+	\AND Finished = 0 AND (Finished = 0) \
     \)"
 
 nums_main :: String -> IO ()
