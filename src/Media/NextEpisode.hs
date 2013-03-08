@@ -12,26 +12,29 @@ import System.Process (runCommand)
 pipe :: String
 pipe = "~/.mplayer/pipe"
 
+type Series = String
+type EpNum  = Int
+
 nextEpisode :: FilePath -> IO (Maybe FilePath)
 nextEpisode path = do
-    (vinfos,n) <- getVideosInfos path
-    let res = filter (nextEpFilter n) vinfos
+    (vinfos,ser,n) <- getVideosInfos path
+    let res = filter (nextEpFilter ser n) vinfos
     return $ 
         case res of
-        [x]    -> Just $ filename x
-        (x:_) -> Just $ filename x
-        _   -> Nothing
+        [x]   -> Just $ filename x
+        _     -> Nothing
 
 
-nextEpFilter :: Int -> VideoInfo -> Bool
-nextEpFilter current VideoInfo{number=candidate} = candidate == current + 1 
+nextEpFilter :: Series -> EpNum ->  VideoInfo -> Bool
+nextEpFilter curSeries  current VideoInfo{number=candidate,series=s} = 
+    candidate == current + 1  && curSeries == s
 
 
-getVideosInfos :: FilePath -> IO ([VideoInfo],Int)
+getVideosInfos :: FilePath -> IO ([VideoInfo],Series, EpNum)
 getVideosInfos path =  do
     let VideoInfo{series=ser, number =n} = parseName name
     vinfos <- getVideosInfo (filterPaths' [ser]) allMedia dir
-    return (vinfos, n)
+    return (vinfos,ser, n)
 
     where
     name = takeBaseName path
@@ -42,7 +45,7 @@ addToPlaylist :: Maybe FilePath -> IO ()
 addToPlaylist Nothing     = return ()
 addToPlaylist (Just next) = do 
     putStrLn $ "Adding to playlist: " ++ next
-    let esc     = bashEscape ("loadfile \"" ++ "" ++ next ++ "\"")
+    let esc     = bashEscape ("loadfile \"" ++ "" ++ next ++ "\" append")
         command = "echo  " ++ esc ++ " > " ++ pipe
     putStrLn $ "Command: " ++ command
     runCommand command
