@@ -1,6 +1,6 @@
 module Media.History
 (
-    findUnwatched, unwatched, allMedia,
+    findUnwatched, unwatched,
     addToHistory, labelFile, hideExtension
 ) where
 
@@ -26,10 +26,9 @@ unwatched currents (v@VideoInfo{number=n, series=s}:[]) =
         Just m    -> if n > m then [v] else []
 unwatched currents (x:xs) =  unwatched currents [x]  ++  unwatched currents xs
 
-allMedia ::  M.Map String Int -> [VideoInfo] -> [VideoInfo]
-allMedia  _ arr = arr
-
-findUnwatched :: (M.Map String Int -> [VideoInfo] -> [VideoInfo]) -> M.Map String [VideoInfo] ->  IO (M.Map String [VideoInfo], M.Map String Int)
+findUnwatched :: (M.Map String Int -> [VideoInfo] -> [VideoInfo]) 
+              -> M.Map String [VideoInfo] 
+              ->  IO (M.Map String [VideoInfo], M.Map String Int)
 findUnwatched func infos = do
     conn <- connectSqlite3 db
     stmt <- prepare conn unwatchedQuery

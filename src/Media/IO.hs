@@ -1,8 +1,8 @@
 module Media.IO
 (   selectVideosInfo,selectVideosInfo', videosInfo, latest, oldest, SeriesKind(..),
-    VideoFilter, FileFilter, 
+    VideoFilter, FileFilter,FileSelector,
     defaultPath, videos,
-    parseName, getVideosInfo
+    parseName, getVideosInfo,allMedia
 ) where
 
 import Media.History
@@ -112,11 +112,14 @@ nums cur (VideoInfo{number=n}:xs) =
         True  -> (show  n ++ "-" ++ show lastNum,Sequential)
         False -> (show  n ++ "_" ++ show lastNum,Missing)
 
-latest :: M.Map String [VideoInfo] -> M.Map String VideoInfo
+latest :: VideoFilter
 latest = M.map maximum
 
-oldest :: M.Map String [VideoInfo] -> M.Map String VideoInfo
+oldest :: VideoFilter
 oldest = M.map minimum
+
+allMedia :: FileFilter
+allMedia  _ arr = arr
 
 pickEpPrompt :: Int -> IO Int
 pickEpPrompt upper = do

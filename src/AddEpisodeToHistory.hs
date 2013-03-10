@@ -3,7 +3,7 @@ module Main where
 import Control.Monad(void)
 
 import Data.Time.Clock(NominalDiffTime,getCurrentTime,addUTCTime)
-import Data.Maybe(isJust,fromJust,catMaybes)
+import Data.Maybe(isJust,fromJust,mapMaybe)
 import qualified Data.Map as M
 
 import Data.List.Split(splitOn)
@@ -40,7 +40,7 @@ parseTime :: String -> Maybe Seconds
 parseTime s | length arr' == 3 = 
     Just $ foldl1  (\a b -> 60 * a +  b ) arr' 
     where arr  = splitOn ":" s
-          arr' = catMaybes $ map parseInt arr
+          arr' = mapMaybe parseInt arr
 
 parseTime _ = Nothing
 
