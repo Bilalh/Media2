@@ -1,8 +1,7 @@
 module Media.NextEpisode(nextEpisode,addToPlaylist) where
 
 import Media.Args(filterPaths')
-import Media.History(allMedia)
-import Media.IO(getVideosInfo,parseName)
+import Media.IO(getVideosInfo,parseName,allMedia)
 import Media.Misc(bashEscape)
 import Media.Types(VideoInfo(..))
 
