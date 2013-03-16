@@ -102,6 +102,8 @@ executable checkForNewEpisodes
                      ,temporary
                      ,hxt
                      ,HandsomeSoup
+                     ,HTTP
+                     ,groom
   ghc-prof-options:
       -auto-all
       -caf-all
