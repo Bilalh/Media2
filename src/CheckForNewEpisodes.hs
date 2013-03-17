@@ -60,7 +60,7 @@ run [fname,fname2,s] = do
             n1 == n2 && g1 == g2
 
         reduce :: [(VideoInfo,Url,Group)] -> [(VideoInfo,Url,Group)]
-        reduce = reduce' ["bit"] . reduce' ["480","1080"]
+        reduce = reduce' ["10bit","8bit", "bit"] . reduce' ["480","1080"]
 
         reduce' :: [String] ->  [(VideoInfo,Url,Group)] ->  [(VideoInfo,Url,Group)]
         reduce' [] ar@[_,_] = case filter (reducer "v2" ) ar of
