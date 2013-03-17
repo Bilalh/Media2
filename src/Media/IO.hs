@@ -2,7 +2,8 @@ module Media.IO
 (   selectVideosInfo,selectVideosInfo', videosInfo, latest, oldest, SeriesKind(..),
     VideoFilter, FileFilter,FileSelector,
     defaultPath, videos,
-    parseName, getVideosInfo,allMedia
+    parseName, getVideosInfo,allMedia,
+    getVideoData
 ) where
 
 import Media.History
@@ -56,10 +57,10 @@ selectVideosInfo' fsel ffunc path func = do
     let res = zip temp [0..]
 
     case null res of
-        True -> do 
+        True -> do
             putStr "No matching Files\n"
             exitFailure
-        False -> do 
+        False -> do
 
         forM_ res $ \(info,n) -> do
             setSGR [ SetColor Foreground Vivid Green]
@@ -79,6 +80,30 @@ selectVideosInfo' fsel ffunc path func = do
             return ()
         index <- (pickEpPrompt . length) res
         return . fst $ res !! index
+
+-- getVideoData id allMedia "/Users/bilalh/Movies/.Movies/Anime" latest
+getVideoData :: FileSelector -> FileFilter -> FilePath -> VideoFilter ->IO [VideoData]
+getVideoData  fsel ffunc path func = do
+    paths <- videos path >>= return . fsel
+    _infos <- videosInfo paths
+    (infos,currents) <- findUnwatched ffunc _infos
+    let classify' = classify currents
+
+    let nums' = M.mapWithKey classify' infos
+        temp =  M.elems . func $  infos
+    let res = zip temp [0..]
+
+    case null res of
+        True -> do
+            putStr "No matching Files\n"
+            exitFailure
+        False -> do
+
+        let fin = (flip map) res $ \(info,n) -> do
+            let c = fromMaybe 0 (M.lookup  (series info) currents)
+            let (colour,str)  = numsLookUp info nums'
+            VideoData{vNumber=n, vPrevious=c, vNext=str,  vSeries=(series info),vFilePath=(filename info) }
+        return $ fin
 
 numsLookUp :: VideoInfo -> M.Map String (t, SeriesKind) -> (Color, t)
 numsLookUp info nums'=
@@ -101,7 +126,7 @@ classify currents str arr =
 nums :: Int -> [VideoInfo] -> (String,SeriesKind)
 nums cur [] = error "No infos given"
 nums cur (VideoInfo{number=n}:[]) =
-    if    n == 1 && cur == 1 
+    if    n == 1 && cur == 1
     ||     n == cur + 1      then (show n,Single)
     else                         (show n,SingleGap)
 
@@ -132,7 +157,7 @@ pickEpPrompt upper = do
 
 
 videosInfo :: [FilePath] -> IO (M.Map String [VideoInfo])
-videosInfo paths = 
+videosInfo paths =
    return $ toVideoMap (map parseName paths) M.empty
 
 videos :: FilePath -> IO [FilePath]
@@ -152,7 +177,7 @@ toVideoMap (x:xs) m  = toVideoMap xs $ case M.lookup (series x) m of
 
 -- Splits the filename into  (name, number, filepath)
 parseName :: FilePath ->  VideoInfo
-parseName filename =  
+parseName filename =
     let s = (reverse  . dropExtension . takeFileName) filename
 
         -- Remove episode name (if any)
@@ -196,8 +221,8 @@ inRange :: Int ->  Int -> Int -> Bool
 inRange val lower upper
   | val >= lower && val < upper  = True
   | otherwise                    = False
- 
-defaultPath= do 
+
+defaultPath= do
     home <- getHomeDirectory
     let movies = home </> "Movies"
     b <-  doesDirectoryExist movies
