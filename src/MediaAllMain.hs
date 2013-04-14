@@ -29,6 +29,8 @@ data Media2 = Media2
     ,extra_args :: [String]
     ,default_   :: Bool
     ,filter_    :: [String]
+    ,screen     :: Maybe Screen
+    ,fs_screen  :: Maybe FsScreen
     }
     deriving (Data, Typeable, Show)
 
@@ -65,6 +67,8 @@ getOpts =
         ,extra_args = def &= name "e" &= help "Extra args to pass to the player"
         ,default_   = def &= name "d" &= help "Use default args for command line players"
         ,filter_    = def &= args     &= typ "regex"
+        ,screen     = def &= name "@" &= help "Put the player on the specifed screen"
+        ,fs_screen  = def &= name "$" &= help "Put the player on the specifed screen when in fullscreen"
         } &=
         versionArg [ignore] &=
         program "media2" &=
@@ -97,13 +101,13 @@ getDefaultArgs _ _          = ""
 
 play :: Media2 -> IO ()
 play opts@(Media2{vFilter =vf, fFilter=ff, vPlayer=player,
-                  history=h, path=p, extra_args=ea, filter_=f, default_=d}) = do
+                  history=h, path=p, extra_args=ea, filter_=f, default_=d, screen=sc, fs_screen=fsc}) = do
     let vfilter = vfilterToFunc vf
         fFilter = ffilterToFunc ff
     selected <- selectVideosInfo' (filterPaths' f) fFilter p vfilter
-    let args =  (getDefaultArgs d player ++ " ") : ea
+    let args =  (getDefaultArgs d player ++ " ") :  mpvArgs sc : mpvArgs fsc : ea
     let command = videoCommand player [filename selected] (foldl' (\a b -> a ++ " " ++ b ) "" args)
-    print command
+    {-print command-}
     pid <- runCommand command
     handleHistory h selected
     return ()

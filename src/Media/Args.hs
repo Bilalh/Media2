@@ -18,6 +18,8 @@ source1 =~+ (source, compOpt, execOpt) = match (makeRegexOpts compOpt execOpt so
 
 class MpvArgs t where mpvArgs :: t -> String
 
+newtype Screen      = Screen   Int       deriving (Show, Read, Data, Typeable, Eq, Ord, Default)
+newtype FsScreen    = FsScreen Int       deriving (Show, Read, Data, Typeable, Eq, Ord, Default)
 newtype Chapter     = Chapter  (Int,Int) deriving (Show, Read, Data, Typeable, Eq, Ord, Default)
 newtype DefaultArgs = DefaultArgs Bool   deriving (Show, Read, Data, Typeable, Eq, Ord, Default)
 newtype Start       = Start Int          deriving (Show, Read, Data, Typeable, Eq, Ord, Default)
@@ -25,6 +27,12 @@ newtype Start       = Start Int          deriving (Show, Read, Data, Typeable, E
 instance (MpvArgs t) => MpvArgs (Maybe t) where 
     mpvArgs Nothing   = ""
     mpvArgs (Just n)  = mpvArgs n
+
+instance MpvArgs Screen where
+    mpvArgs (Screen num) = " --screen=" ++ show num
+
+instance MpvArgs FsScreen where
+    mpvArgs (FsScreen num) = " --fs-screen=" ++ show num
 
 instance MpvArgs Chapter where
     mpvArgs ( Chapter (a,b) ) = " --chapter " ++ show a ++ "-" ++ show b ++ " "

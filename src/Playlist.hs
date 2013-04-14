@@ -16,6 +16,8 @@ data Playlists2 = Playlists2
     ,extra_args :: [String]
     ,default_   :: DefaultArgs
     ,chapter    :: Maybe Chapter
+    ,screen     :: Maybe Screen
+    ,fs_screen  :: Maybe FsScreen
     ,start      :: Maybe Start
     ,filter_    :: [String]
     }
@@ -34,7 +36,7 @@ play opts@(Playlists2{vPlayer=player, path=p, extra_args=ea, filter_=f}) = do
    files  <- videos p
    let files2 = filterPaths files f
    let command = videoCommand player files2 args
-   --print command
+   {-print command-}
 
    pid <- runCommand command
    return ()
@@ -53,6 +55,8 @@ getOpts =
         ,extra_args = def &= name "e" &= help "Extra args to pass to the player"
         ,default_   = def &= name "d" &= help "use default mpv args ( -geometry 0%:100% --autofit=480 --loop=inf) "
         ,chapter    = def &= name "c" &= help "Only play the specified chapters"
+        ,screen     = def &= name "#" &= help "Put the player on the specifed screen"
+        ,fs_screen  = def &= name "@" &= help "Put the player on the specifed screen when in fullscreen"
         ,start      = def &= name "s" &= help "Where to start playback from"
         ,filter_    = def &= args     &= typ "regex"
         } &=
@@ -63,8 +67,8 @@ getOpts =
 
 
 processArgs :: Playlists2 -> Playlists2
-processArgs args@(Playlists2{extra_args=ea, default_=d, chapter=c, start=s }) = 
-    args{extra_args =  mpvArgs d : mpvArgs c : mpvArgs s : ea}
+processArgs args@(Playlists2{extra_args=ea, default_=d, chapter=c, start=s, screen=sc, fs_screen=fsc  }) = 
+    args{extra_args =   mpvArgs d : mpvArgs c : mpvArgs s : mpvArgs sc : mpvArgs fsc : ea}
 
 fillInOpts :: Playlists2 -> IO Playlists2
 fillInOpts opts@(Playlists2{path=p} ) | p == ""  =do
