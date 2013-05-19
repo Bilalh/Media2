@@ -1,9 +1,10 @@
+{-# LANGUAGE Arrows, NoMonomorphismRestriction #-}
 module Main where
 import Control.Applicative((<$>))
 
 import Data.Char(isSpace,isDigit)
 import Data.Function(on)
-import Data.List(sortBy,groupBy,intercalate,nub,isInfixOf)
+import Data.List(sortBy,groupBy,intercalate,nub,isInfixOf,stripPrefix)
 import Data.Maybe(fromMaybe,isJust,fromJust)
 
 import Media.IO(parseName,videos, videosInfo,latest)
@@ -19,6 +20,8 @@ import Text.Groom(groom)
 
 import Network.HTTP(urlEncodeVars)
 
+import Text.Regex(subRegex, mkRegex)
+
 import qualified Data.Map as M
 
 type Group = String
@@ -26,6 +29,14 @@ type Url   = String
 
 aPath :: String
 aPath="/Users/bilalh/Movies/.Movies/Anime/"
+
+u = run ["/Users/bilalh/index.html","/Users/bilalh/index.html?page=2", "-a"]
+y = yy "/Users/bilalh/index.html"  >>= putStrLn . groom
+
+yy f = do
+    contents <- readFile f
+    let doc = parseHtml contents
+    processPage2 doc
 
 main :: IO()
 main = getArgs >>= run
@@ -66,6 +77,7 @@ run [fname,fname2,s] = do
         reduce' [] ar@[_,_] = case filter (reducer "v2" ) ar of
                         [] -> ar
                         [x] -> [x] 
+                        ar -> ar
 
         reduce' (x:xs) ar = case filter (not . reducer x) ar of
                         []  -> ar
@@ -94,7 +106,6 @@ printData showOnlyFollowing short res =  do
         func = if short then printShort else printGroup  newest
 
     mapM_ func res'
-
 
 
 onlyFollowing :: M.Map String VideoInfo ->  [(VideoInfo, Url, Group)] ->  [(VideoInfo, Url, Group)]
@@ -134,7 +145,7 @@ printGroup vmap ar = do
     printVideo :: (VideoInfo,Url,String) -> IO ()
     printVideo (VideoInfo{number=n,filename=fn}, url,group ) = do
         printf "   %3d: %-16s %s\n" n group url
-        printf "   %3s  %-16s %s\n" "" "" (nibl fn)
+        {-printf "   %3s  %-16s %s\n" "" "" (nibl fn)-}
 
     nibl :: FilePath -> Url
     nibl fn= "http://nibl.co.uk/bots.php?" ++
@@ -147,6 +158,23 @@ processPage doc =
     >>> css "div.link a"
     >>> (this >>> deep getText >. concat &&& getAttrValue "href"  )
 
+processPage2 :: IOSArrow XmlTree XmlTree -> IO [(Maybe Group,String,Url)  ]
+processPage2 doc =
+    runX  $ doc
+    >>> processTopDown (filterA $ neg (hasName "wbr"))
+    >>> css "div.zzzzSeries"
+    >>> proc x -> do 
+        (fname,url) <- css "div.link a"  
+                >>> this >>> deep getText >. concat 
+                &&& getAttrValue "href" -< x
+        seriesData <- listA $ css "span.serieslink" 
+                      >>> deep getText >. concat -< x
+        returnA -< (seriesHandle seriesData,fname,url)
+
+    where 
+    seriesHandle []  = Nothing
+    seriesHandle [s] = let rev = reverse s in Just (reverse . fromMaybe rev $ stripPrefix "..."   rev)
+    seiresHandle ss = error . groom  $ ("seriesHandle",ss)
 
 groupFileNames :: [(String, Url)] -> [[(VideoInfo, Url,Group)]]
 groupFileNames info =
