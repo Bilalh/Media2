@@ -67,8 +67,8 @@ getOpts =
         ,extra_args = def &= name "e" &= help "Extra args to pass to the player"
         ,default_   = def &= name "d" &= help "Use default args for command line players"
         ,filter_    = def &= args     &= typ "regex"
-        ,screen     = def &= name "@" &= help "Put the player on the specifed screen"
-        ,fs_screen  = def &= name "$" &= help "Put the player on the specifed screen when in fullscreen"
+        ,screen     = def &= name "#" &= help "Put the player on the specifed screen"
+        ,fs_screen  = def &= name "@" &= help "Put the player on the specifed screen when in fullscreen"
         } &=
         versionArg [ignore] &=
         program "media2" &=

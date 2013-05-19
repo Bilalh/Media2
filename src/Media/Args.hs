@@ -24,6 +24,7 @@ newtype Chapter     = Chapter  (Int,Int) deriving (Show, Read, Data, Typeable, E
 newtype DefaultArgs = DefaultArgs Bool   deriving (Show, Read, Data, Typeable, Eq, Ord, Default)
 newtype Start       = Start Int          deriving (Show, Read, Data, Typeable, Eq, Ord, Default)
 
+
 instance (MpvArgs t) => MpvArgs (Maybe t) where 
     mpvArgs Nothing   = ""
     mpvArgs (Just n)  = mpvArgs n
