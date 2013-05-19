@@ -20,7 +20,6 @@ import Text.Groom(groom)
 
 import Network.HTTP(urlEncodeVars)
 
-import Text.Regex(subRegex, mkRegex)
 
 import qualified Data.Map as M
 
@@ -54,11 +53,11 @@ run [fname,fname2,s] = do
     return ()
 
     where
-    process :: FilePath -> IO [(String,Url)]
+    process :: FilePath -> IO [(Maybe Group,String,Url)]
     process f = do
         contents <- readFile f
         let doc = parseHtml contents
-        processPage doc
+        processPage2 doc
 
 
     nubSame :: [(VideoInfo,Url,Group)] -> [(VideoInfo,Url,Group)]
@@ -145,7 +144,7 @@ printGroup vmap ar = do
     printVideo :: (VideoInfo,Url,String) -> IO ()
     printVideo (VideoInfo{number=n,filename=fn}, url,group ) = do
         printf "   %3d: %-16s %s\n" n group url
-        {-printf "   %3s  %-16s %s\n" "" "" (nibl fn)-}
+        printf "   %3s  %-16s %s\n" "" "" (nibl fn)
 
     nibl :: FilePath -> Url
     nibl fn= "http://nibl.co.uk/bots.php?" ++
@@ -174,9 +173,9 @@ processPage2 doc =
     where 
     seriesHandle []  = Nothing
     seriesHandle [s] = let rev = reverse s in Just (reverse . fromMaybe rev $ stripPrefix "..."   rev)
-    seiresHandle ss = error . groom  $ ("seriesHandle",ss)
+    seriesHandle  ss = error . groom  $ ("seriesHandle",ss)
 
-groupFileNames :: [(String, Url)] -> [[(VideoInfo, Url,Group)]]
+groupFileNames :: [(Maybe Group,String, Url)] -> [[(VideoInfo, Url,Group)]]
 groupFileNames info =
          groupBy ((==) `on` series . fst3 )
        . sortBy (compare `on` fst3)
@@ -191,15 +190,17 @@ groupFileNames info =
     madeVideoInfo ::  [(String,Url)] -> [(VideoInfo,Url)]
     madeVideoInfo = map $ first (arr parseName)
 
-    giveRealFileName :: (String,Url) -> (VideoInfo,Url)  -> (VideoInfo,Url)
-    giveRealFileName (fn,url) (v, _)  = (v{filename=fn},url)
+    giveRealFileName :: (Maybe Group, String,Url) -> (VideoInfo,Url)  -> (VideoInfo,Url)
+    giveRealFileName (_,fn,url) (v, _)  = (v{filename=fn},url)
 
-    processFileNames :: [(String,b)] -> [((String, b), Group)]
+    processFileNames :: [(Maybe Group,String,b)] -> [((String, b), Group)]
     processFileNames = map f
-    f :: (String, t) -> ((String,t), Group)
-    f (a,b) =
+    f :: (Maybe Group,String, t) -> ((String,t), Group)
+    f (g,a,b) =
         let (s,group) = processFileName a
-        in ((s,b),group)
+        in case g of 
+            Nothing ->  ((s,b),group)
+            Just gr -> ((s,b),gr)
 
 
 fst3 :: (a,b,c) -> a
