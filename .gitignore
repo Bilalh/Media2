@@ -2,3 +2,6 @@
 dist
 tags
 nextEpisode
+src/AddEpisodeToHistory
+src/CheckForNewEpisodes
+src/OutputData
