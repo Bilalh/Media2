@@ -25,7 +25,7 @@ executable nextEpisode
                      ,shell-escape
                      ,bytestring
                      ,ansi-terminal
-                     ,containers
+                     ,containers >= 0.5.2
                      ,filepath
                      ,directory
                      ,HDBC >=2.3
@@ -57,7 +57,7 @@ executable addEpisodeToHistory
                      ,shell-escape
                      ,bytestring
                      ,ansi-terminal
-                     ,containers
+                     ,containers >= 0.5.2
                      ,filepath
                      ,directory
                      ,HDBC >=2.3
@@ -90,7 +90,7 @@ executable checkForNewEpisodes
                      ,shell-escape
                      ,bytestring
                      ,ansi-terminal
-                     ,containers
+                     ,containers >= 0.5.2
                      ,filepath
                      ,directory
                      ,HDBC >=2.3
@@ -128,7 +128,7 @@ test-suite spec
                   ,shell-escape
                   ,bytestring
                   ,ansi-terminal
-                  ,containers
+                  ,containers >= 0.5.2
                   ,filepath
                   ,directory
                   ,HDBC >=2.3
@@ -197,7 +197,7 @@ executable media2
                      ,shell-escape
                      ,bytestring
                      ,ansi-terminal
-                     ,containers
+                     ,containers >= 0.5.2
                      ,filepath
                      ,directory
                      ,HDBC >=2.3
@@ -226,7 +226,7 @@ executable hista
    build-depends:      base     == 4.6.*
                       ,HDBC >=2.3
                       ,HDBC-sqlite3 >=2.3
-                      ,containers
+                      ,containers >= 0.5.2
                       ,time
                       ,split
                       ,old-locale
@@ -261,7 +261,7 @@ executable  nums
                       ,time
                       ,old-locale
                       ,ansi-terminal
-                      ,containers
+                      ,containers >= 0.5.2
                       ,shell-escape
                       ,bytestring
   --ghc-prof-options:
@@ -288,7 +288,7 @@ executable  numsf
                       ,time
                       ,old-locale
                       ,ansi-terminal
-                      ,containers
+                      ,containers >= 0.5.2
                       ,shell-escape
                       ,bytestring
 
@@ -302,6 +302,6 @@ executable  numss
                       ,time
                       ,old-locale
                       ,ansi-terminal
-                      ,containers
+                      ,containers >= 0.5.2
                       ,shell-escape
                       ,bytestring
