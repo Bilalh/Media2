@@ -44,9 +44,11 @@ addToPlaylist :: Maybe FilePath -> IO ()
 addToPlaylist Nothing     = return ()
 addToPlaylist (Just next) = do 
     putStrLn $ "Adding to playlist: " ++ next
-    let esc     = bashEscape ("playlist_clear\nloadfile \"" ++ "" ++ next ++ "\" append")
-        command = "echo  " ++ esc ++ " > " ++ pipe
-    putStrLn $ "Command: " ++ command
-    runCommand command
+    let esc     =  "playlist_clear"
+        esc2    = bashEscape ("loadfile \"" ++ "" ++ next ++ "\" append")
+        command s = "echo  " ++ s ++ " > " ++ pipe
+        commands = map command [esc,esc2]
+    mapM_ (\s -> putStrLn $ "Command: " ++ s) commands
+    mapM runCommand commands
     return ()
 
