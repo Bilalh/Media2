@@ -19,7 +19,7 @@ data PlayerType = MPlayer | MPlayerOSX | MPlayerX | VLC | MPV | MPV_App
 
 
 
-inputArgs          = " -input file=/Users/bilalh/.mplayer/pipe -input conf=/Users/bilalh/.mpv/input_no_enter.conf"
+inputArgs          = " -input file=/Users/bilalh/.mplayer/pipe"
 defaultMplayerArgs = inputArgs ++  "-geometry 0:0 -xy 480 -really-quiet "
 defaultMpvArgs     = inputArgs ++ " -geometry 0%:100% --autofit=480 "
 
