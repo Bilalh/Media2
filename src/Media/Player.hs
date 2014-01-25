@@ -19,9 +19,9 @@ data PlayerType = MPlayer | MPlayerOSX | MPlayerX | VLC | MPV | MPV_App
 
 
 
-inputArgs          = " -input file=/Users/bilalh/.mplayer/pipe"
-defaultMplayerArgs = inputArgs ++  "-geometry 0:0 -xy 480 -really-quiet "
-defaultMpvArgs     = inputArgs ++ " -geometry 0%:100% --autofit=480 "
+inputArgs          = " -input file=/Users/bilalh/.mplayer/pipe "
+defaultMplayerArgs = inputArgs ++  " -geometry 0:0 -xy 480 -really-quiet "
+defaultMpvArgs     = inputArgs ++  " -geometry 0%:100% --autofit=480 "
 
 --  command to run on the file
 --  CHANGE pipe to location of mplayer's pipe
