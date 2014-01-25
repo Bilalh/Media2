@@ -10,6 +10,10 @@ import Data.List(foldl')
 import System.Process (runCommand)
 import System.Console.CmdArgs
 
+import qualified Algorithms.NaturalSort as NS
+
+import Data.List(sortBy)
+
 data Playlists2 = Playlists2
     {vPlayer    :: PlayerType
     ,path       :: FilePath
@@ -25,7 +29,7 @@ data Playlists2 = Playlists2
 
 main = do
    opts <- cmdArgs getOpts
-   print opts
+   {-print opts-}
    opts' <- fillInOpts opts
    play (processArgs opts')
    return ()
@@ -34,9 +38,8 @@ main = do
 play :: Playlists2 -> IO ()
 play opts@(Playlists2{vPlayer=player, path=p, extra_args=ea, filter_=f}) = do
    files  <- videos p
-   let files2 = filterPaths files f
+   let files2 = sortBy NS.compare $ filterPaths files f
    let command = videoCommand player files2 args
-   {-print command-}
 
    pid <- runCommand command
    return ()
