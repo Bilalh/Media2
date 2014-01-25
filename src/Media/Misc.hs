@@ -1,6 +1,6 @@
 module Media.Misc where
 
-import qualified Data.ByteString.Char8 as B
+import qualified Data.ByteString.UTF8 as B
 import qualified Text.ShellEscape as Esc
 
 import Data.Time.Format
@@ -22,4 +22,4 @@ getTimeStamp t =
     in fst res
 
 bashEscape :: String -> String
-bashEscape  = B.unpack . Esc.bytes . Esc.bash . B.pack
+bashEscape  = B.toString . Esc.bytes . Esc.bash . B.fromString
