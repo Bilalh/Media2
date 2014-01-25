@@ -45,10 +45,12 @@ addToPlaylist Nothing     = return ()
 addToPlaylist (Just next) = do 
     putStrLn $ "Adding to playlist: " ++ next
     let esc     =  "playlist_clear"
-        esc2    = bashEscape ("loadfile \"" ++ "" ++ next ++ "\" append")
+        esc2    = bashEscape ("loadfile \"" ++ "" ++ next ++ "\" append") 
         command s = "echo  " ++ s ++ " > " ++ pipe
         commands = map command [esc,esc2]
     mapM_ (\s -> putStrLn $ "Command: " ++ s) commands
-    mapM runCommand commands
+    {-runCommand $ commands !! 0-}
+    runCommand $ commands !! 1
+    
     return ()
 
