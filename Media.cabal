@@ -33,6 +33,7 @@ executable nextEpisode
                      ,time
                      ,cmdargs
                      ,regex-tdfa
+                     ,utf8-string
   ghc-prof-options:
       -auto-all
       -caf-all
@@ -66,6 +67,7 @@ executable addEpisodeToHistory
                      ,cmdargs
                      ,regex-tdfa
                      ,split
+                      ,utf8-string
   ghc-prof-options:
       -auto-all
       -caf-all
@@ -104,6 +106,7 @@ executable checkForNewEpisodes
                      ,HandsomeSoup
                      ,HTTP
                      ,groom
+                     ,utf8-string
   ghc-prof-options:
       -auto-all
       -caf-all
@@ -137,6 +140,7 @@ test-suite spec
                   ,old-locale
                   ,bytestring
                   ,parsec
+                  ,utf8-string
 
   --ghc-prof-options:
       ---auto-all
@@ -171,6 +175,8 @@ executable playlists
                      ,time
                      ,cmdargs
                      ,regex-tdfa
+                     ,utf8-string
+                     ,natural-sort
 
   --ghc-prof-options:
       ---auto-all
@@ -205,6 +211,7 @@ executable media2
                      ,time
                      ,cmdargs
                      ,regex-tdfa
+                     ,utf8-string
   --ghc-prof-options:
       ---auto-all
       ---caf-all
@@ -236,7 +243,8 @@ executable hista
                       ,ansi-terminal
                       ,filepath
                       ,directory
-                      ,process
+                      ,process 
+                      ,utf8-string
   --ghc-prof-options:
       ---auto-all
       ---caf-all
@@ -264,6 +272,7 @@ executable  nums
                       ,containers >= 0.5.2
                       ,shell-escape
                       ,bytestring
+                      ,utf8-string
   --ghc-prof-options:
       ---auto-all
       ---caf-all
@@ -291,6 +300,7 @@ executable  numsf
                       ,containers >= 0.5.2
                       ,shell-escape
                       ,bytestring
+                      ,utf8-string
 
 executable  numss
    main-is:            Numss.hs
@@ -305,3 +315,4 @@ executable  numss
                       ,containers >= 0.5.2
                       ,shell-escape
                       ,bytestring
+                      ,utf8-string
