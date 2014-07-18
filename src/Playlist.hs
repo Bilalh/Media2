@@ -70,7 +70,7 @@ getOpts =
 
 
 processArgs :: Playlists2 -> Playlists2
-processArgs args@(Playlists2{extra_args=ea, default_=d, chapter=c, start=s, screen=sc, fs_screen=fsc  }) = 
+processArgs args@(Playlists2{extra_args=ea, default_=d, chapter=c, start=s, screen=sc, fs_screen=fsc  }) =
     args{extra_args =   mpvArgs d : mpvArgs c : mpvArgs s : mpvArgs sc : mpvArgs fsc : ea}
 
 fillInOpts :: Playlists2 -> IO Playlists2

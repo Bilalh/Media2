@@ -40,6 +40,8 @@ videoCommand VLC        info  _ =  "open -a VLC --args "                    ++ e
 esc []  = error "No video files found!"
 --esc [x] = bashEscape x
 --esc infos = foldl1' (\a b -> a ++ " " ++ bashEscape b) infos
-esc infos = foldl1' (\a b -> a ++ " " ++ b)  (map ( f . bashEscape) infos)
+esc [info] = foldl1' (\a b -> a ++ " " ++ b)  (map ( f . bashEscape) [info])
     where
-    f a = a ++ " --sub " ++ a
+    f a = a ++ " --sub-file " ++ a
+
+esc infos = foldl1' (\a b -> a ++ " " ++ b)  (map (  bashEscape) infos)

@@ -45,7 +45,7 @@ instance MpvArgs DefaultArgs where
 instance MpvArgs Start where
     mpvArgs ( Start a ) = " --start " ++ show a ++ " "
 
-defaultmpvArgs  = " --shuffle  -geometry 0%:100% --autofit=480 --aspect=16:9 --loop=inf -input conf=/Users/bilalh/.mpv/input_with_last_fm.conf"
+defaultmpvArgs  = " --shuffle  -geometry 0%:100% --autofit=480 --video-aspect=16:9 --loop=inf -input conf=/Users/bilalh/.mpv/input_with_last_fm.conf"
 
 filterPaths' :: [String] ->  [FilePath] -> [FilePath]
 filterPaths' = flip filterPaths

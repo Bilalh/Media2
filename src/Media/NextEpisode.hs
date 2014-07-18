@@ -1,4 +1,4 @@
-module Media.NextEpisode(nextEpisode,addToPlaylist) where
+module Media.NextEpisode(nextEpisodes,nextEpisode, addToPlaylist) where
 
 import Media.Args(filterPaths')
 import Media.IO(getVideosInfo,parseName,allMedia)
@@ -7,6 +7,8 @@ import Media.Types(VideoInfo(..))
 
 import System.FilePath(takeBaseName,takeDirectory)
 import System.Process (runCommand)
+
+import Data.List(sort)
 
 pipe :: String
 pipe = "~/.mplayer/pipe"
@@ -23,10 +25,23 @@ nextEpisode path = do
         [x]   -> Just $ filename x
         _     -> Nothing
 
+    where
+    nextEpFilter :: Series -> EpNum ->  VideoInfo -> Bool
+    nextEpFilter curSeries  current VideoInfo{number=candidate,series=s} = 
+        candidate == current + 1  && curSeries == s
 
-nextEpFilter :: Series -> EpNum ->  VideoInfo -> Bool
-nextEpFilter curSeries  current VideoInfo{number=candidate,series=s} = 
-    candidate == current + 1  && curSeries == s
+
+
+nextEpisodes :: FilePath -> IO [FilePath]
+nextEpisodes path = do
+    (vinfos,ser,n) <- getVideosInfos path
+    let res = filter (nextEpsFilter ser n) vinfos
+    return $ map filename . sort $ res
+
+    where
+    nextEpsFilter :: Series -> EpNum ->  VideoInfo -> Bool
+    nextEpsFilter curSeries  current VideoInfo{number=candidate,series=s} = 
+        candidate > current  && curSeries == s
 
 
 getVideosInfos :: FilePath -> IO ([VideoInfo],Series, EpNum)
@@ -40,17 +55,17 @@ getVideosInfos path =  do
     dir  = takeDirectory path
 
 
-addToPlaylist :: Maybe FilePath -> IO ()
-addToPlaylist Nothing     = return ()
-addToPlaylist (Just next) = do 
-    putStrLn $ "Adding to playlist: " ++ next
+addToPlaylist :: [FilePath] -> IO ()
+addToPlaylist []     = return ()
+addToPlaylist (x:xs) = do 
+    putStrLn $ "Adding to playlist: " ++ x
     let esc     =  "playlist_clear"
-        esc2    = bashEscape ("loadfile \"" ++ "" ++ next ++ "\" append") 
+        esc2    = bashEscape ("loadfile \"" ++ "" ++ x ++ "\" append") 
         command s = "echo  " ++ s ++ " > " ++ pipe
         commands = map command [esc,esc2]
     mapM_ (\s -> putStrLn $ "Command: " ++ s) commands
     {-runCommand $ commands !! 0-}
     runCommand $ commands !! 1
     
-    return ()
+    addToPlaylist xs 
 

@@ -23,6 +23,7 @@ import Network.HTTP(urlEncodeVars)
 
 import qualified Data.Map as M
 
+
 type Group = String
 type Url   = String
 
@@ -75,7 +76,7 @@ run [fname,fname2,s] = do
         reduce' :: [String] ->  [(VideoInfo,Url,Group)] ->  [(VideoInfo,Url,Group)]
         reduce' [] ar@[_,_] = case filter (reducer "v2" ) ar of
                         [] -> ar
-                        [x] -> [x] 
+                        [x] -> [x]
                         ar -> ar
 
         reduce' (x:xs) ar = case filter (not . reducer x) ar of
@@ -162,15 +163,15 @@ processPage2 doc =
     runX  $ doc
     >>> processTopDown (filterA $ neg (hasName "wbr"))
     >>> css "div.zzzzSeries"
-    >>> proc x -> do 
-        (fname,url) <- css "div.link a"  
-                >>> this >>> deep getText >. concat 
+    >>> proc x -> do
+        (fname,url) <- css "div.link a"
+                >>> this >>> deep getText >. concat
                 &&& getAttrValue "href" -< x
-        seriesData <- listA $ css "span.serieslink" 
+        seriesData <- listA $ css "span.serieslink"
                       >>> deep getText >. concat -< x
         returnA -< (seriesHandle seriesData,fname,url)
 
-    where 
+    where
     seriesHandle []  = Nothing
     seriesHandle [s] = let rev = reverse s in Just (reverse . fromMaybe rev $ stripPrefix "..."   rev)
     seriesHandle  ss = error . groom  $ ("seriesHandle",ss)
@@ -198,7 +199,7 @@ groupFileNames info =
     f :: (Maybe Group,String, t) -> ((String,t), Group)
     f (g,a,b) =
         let (s,group) = processFileName a
-        in case g of 
+        in case g of
             Nothing ->  ((s,b),group)
             Just gr -> ((s,b),gr)
 

@@ -20,7 +20,7 @@ executable nextEpisode
   main-is:            PlayNextEpisode.hs
   hs-source-dirs:     src
   other-modules:
-  build-depends:      base     == 4.6.*
+  build-depends:      base
                      ,process
                      ,shell-escape
                      ,bytestring
@@ -53,7 +53,7 @@ executable addEpisodeToHistory
   main-is:            AddEpisodeToHistory.hs
   hs-source-dirs:     src
   other-modules:
-  build-depends:      base     == 4.6.*
+  build-depends:      base
                      ,process
                      ,shell-escape
                      ,bytestring
@@ -83,44 +83,6 @@ executable addEpisodeToHistory
       -Wall
       -fno-warn-unused-do-bind
 
-executable checkForNewEpisodes 
-  main-is:            CheckForNewEpisodes.hs
-  hs-source-dirs:     src
-  other-modules:
-  build-depends:      base     == 4.6.*
-                     ,process
-                     ,shell-escape
-                     ,bytestring
-                     ,ansi-terminal
-                     ,containers >= 0.5.2
-                     ,filepath
-                     ,directory
-                     ,HDBC >=2.3
-                     ,HDBC-sqlite3 >=2.3
-                     ,time
-                     ,cmdargs
-                     ,regex-tdfa
-                     ,split
-                     ,temporary
-                     ,hxt
-                     ,HandsomeSoup
-                     ,HTTP
-                     ,groom
-                     ,utf8-string
-  ghc-prof-options:
-      -auto-all
-      -caf-all
-  ghc-options:
-      -fwarn-incomplete-patterns
-      -fwarn-missing-signatures
-      -fwarn-name-shadowing
-      -fwarn-orphans
-      -fwarn-overlapping-patterns
-      -fwarn-tabs
-      -fwarn-unused-do-bind
-      -fwarn-unused-matches
-      -Wall
-      -fno-warn-unused-do-bind
 
 test-suite spec
   type:           exitcode-stdio-1.0
@@ -158,11 +120,11 @@ test-suite spec
       ---fno-warn-unused-do-bind
 
 
-executable playlists 
+executable playlists
   main-is:            playlist.hs
   hs-source-dirs:     src
   other-modules:
-  build-depends:      base     == 4.6.*
+  build-depends:      base
                      ,process
                      ,shell-escape
                      ,bytestring
@@ -198,7 +160,7 @@ executable media2
   main-is:            MediaAllMain.hs
   hs-source-dirs:     src
   other-modules:
-  build-depends:      base     == 4.6.*
+  build-depends:      base
                      ,process
                      ,shell-escape
                      ,bytestring
@@ -230,7 +192,7 @@ executable hista
    main-is:            HistoryAdd.hs
    hs-source-dirs:    src
    -- other-modules:
-   build-depends:      base     == 4.6.*
+   build-depends:      base
                       ,HDBC >=2.3
                       ,HDBC-sqlite3 >=2.3
                       ,containers >= 0.5.2
@@ -243,7 +205,7 @@ executable hista
                       ,ansi-terminal
                       ,filepath
                       ,directory
-                      ,process 
+                      ,process
                       ,utf8-string
   --ghc-prof-options:
       ---auto-all
@@ -263,7 +225,7 @@ executable  nums
    main-is:            Nums.hs
    hs-source-dirs:    src
    -- other-modules:
-   build-depends:      base     == 4.6.*
+   build-depends:      base
                       ,HDBC >=2.3
                       ,HDBC-sqlite3 >=2.3
                       ,time
@@ -291,7 +253,7 @@ executable  numsf
    main-is:            Numsf.hs
    hs-source-dirs:    src
    -- other-modules:
-   build-depends:      base     == 4.6.*
+   build-depends:      base
                       ,HDBC >=2.3
                       ,HDBC-sqlite3 >=2.3
                       ,time
@@ -306,7 +268,7 @@ executable  numss
    main-is:            Numss.hs
    hs-source-dirs:    src
    -- other-modules:
-   build-depends:      base     == 4.6.*
+   build-depends:      base
                       ,HDBC >=2.3
                       ,HDBC-sqlite3 >=2.3
                       ,time

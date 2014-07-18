@@ -16,7 +16,6 @@ import System.Process (runCommand)
 
 import System.Console.CmdArgs
 
-
 data VFilter = Oldest    | Latest deriving (Data, Typeable, Show)
 data FFilter = Unwatched | All    deriving (Data, Typeable, Show)
 

@@ -22,7 +22,6 @@ main = do
     res <- processArgs  args
     return ()
 
-
 processArgs :: [String] -> IO Integer
 processArgs l@(series:lowerNum:[])  =  do
         t <- getCurrentTime
@@ -43,7 +42,7 @@ processArgs _  = help
 
 processExtra :: Integer -> String -> Int ->  IO ()
 processExtra  1 series number = do
-    videos <- (videos path) >>= videosInfo 
+    videos <- (videos path) >>= videosInfo
     case M.lookup series videos of
         Nothing  ->  return ()
         Just arr ->  do
