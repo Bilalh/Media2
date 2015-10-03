@@ -1,9 +1,11 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Media.IO
 (   selectVideosInfo,selectVideosInfo', videosInfo, latest, oldest, SeriesKind(..),
     VideoFilter, FileFilter,FileSelector,
     defaultPath, videos,
     parseName, getVideosInfo,allMedia,
-    getVideoData
+    getVideoData, getVideosInfo', media
 ) where
 
 import Media.History
@@ -26,14 +28,19 @@ import System.IO (stdout, hFlush)
 import System.Console.ANSI
 import Text.Printf
 
+import qualified Data.Text as T
 
 type VideoFilter  = (M.Map String [VideoInfo] -> M.Map String VideoInfo)
 type FileFilter   = (M.Map String Int -> [VideoInfo] -> [VideoInfo])
 type FileSelector = ([FilePath] -> [FilePath])
+type VideoSupplier =(FilePath -> IO [FilePath])
 
 getVideosInfo :: FileSelector -> FileFilter -> FilePath ->  IO [VideoInfo]
-getVideosInfo fsel ffunc path = do
-    paths <- videos path >>= return . fsel
+getVideosInfo = getVideosInfo' videos
+
+getVideosInfo' ::VideoSupplier ->  FileSelector -> FileFilter -> FilePath ->  IO [VideoInfo]
+getVideosInfo' vsp fsel ffunc path = do
+    paths <- vsp path >>= return . fsel
     _infos <- videosInfo paths
     (infos,currents) <- findUnwatched ffunc _infos
     let classify' = classify currents
@@ -76,7 +83,7 @@ selectVideosInfo' fsel ffunc path func = do
             setSGR [ SetColor Foreground Dull colour]
             printf "%-5s " str
             setSGR [ Reset]
-            printf "%6s %s\n" "" (series info)
+            printf "%6s %s\n" ("" :: String) (series info)
             return ()
         index <- (pickEpPrompt . length) res
         return . fst $ res !! index
@@ -166,7 +173,16 @@ videos =  ffind  vaildVideoExts
 vaildVideoExts :: String -> Bool
 vaildVideoExts name = not  (isSuffixOf "OCC" $ dropExtension name)
                      && any func [".mkv", ".mp4", ".avi",".webm", ".flv"]
-                     where func allowed = allowed == takeExtension name
+                     where func allowed = allowed ==  map toLower (takeExtension name)
+
+media = ffind exts
+    where
+    exts name = any func [ ".mkv"    , ".mp4"   , ".avi"  , ".webm" , ".flv"
+                         , ".ogm"    , ".rm"    , ".rmvb" , ".divx" , ".wmv" , ".mpg"  , ".mov"
+                         , ".aac"    , ".m4a"   , ".m4b"  , ".mp3"  , ".ogg" , ".flac"
+                         , ".srt"    , ".ssa"   , ".ass"
+                         , ".xdelta" , ".patch" , ".txt"  , ".md"]
+         where func allowed = allowed ==  map toLower (takeExtension name)
 
 --  Create a map categorised by series
 toVideoMap  :: [VideoInfo] -> M.Map String [VideoInfo] -> M.Map String [VideoInfo]
@@ -188,16 +204,32 @@ parseName filename =
         (revStr,num) =  case span isDigit s' of
                        ("", revStr) -> (revStr, 1)
                        (num,revStr) -> (revStr, (read . reverse) num)
+        seriesName = func revStr
 
-    in VideoInfo (func revStr) num filename
+    in VideoInfo (rmOpEd seriesName) num filename
 
     where fix' =  dropWhile isPunctuation . dropWhile isSpace
           fix  =  dropWhile isSpace . fix'
           func =  map colonToSlash . dropWhile isSpace . reverse . fix
 
+
+
           -- To be consistent with the GUI
           colonToSlash ':' = '/'
           colonToSlash  a  = a
+
+rmOpEd = rmEd .  rmOp
+
+    where
+    rmOp f  =
+        case (T.breakOn " op " (T.pack f)) of
+            (s, "") -> f
+            (s, _)  -> T.unpack s
+
+    rmEd f  =
+        case (T.breakOn " ed " (T.pack f)) of
+            (s, "") -> f
+            (s, _)  -> T.unpack s
 
 -- returns the name based on a function
 ffind :: (FilePath -> Bool) -> FilePath -> IO [FilePath]
@@ -208,7 +240,7 @@ ffind p path = do
 getRecursiveContents :: FilePath -> IO [FilePath]
 getRecursiveContents topdir = do
   names <- getDirectoryContents topdir
-  let properNames = filter (`notElem` [".", ".."]) names
+  let properNames = filter (`notElem` [".", "..", "pv", "oped" ]) names
   paths <- forM properNames $ \name -> do
     let path = topdir </> name
     isDirectory <- doesDirectoryExist path
