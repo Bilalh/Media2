@@ -121,4 +121,3 @@ handleHistory True selected = do
     return ()
 
 handleHistory False _ = return ()
-

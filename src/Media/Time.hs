@@ -12,7 +12,6 @@ import Data.Time
 import Data.Time.Format
 import qualified Data.Map as M
 
-import System.Locale
 
 import Media.Misc
 

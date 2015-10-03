@@ -1,6 +1,6 @@
 module Media.Info (
-    nums_main, queryLatest, 
-    queryLatestWithFinished, 
+    nums_main, queryLatest,
+    queryLatestWithFinished,
     queryLatestWithFinishedAndSkipped,
     queryLatestWithSkipped
 ) where
@@ -16,7 +16,6 @@ import Text.Printf
 
 import System.Environment(getArgs)
 import System.Console.ANSI
-import System.Locale
 
 import Media.Misc
 import Terminal

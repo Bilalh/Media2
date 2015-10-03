@@ -79,4 +79,3 @@ fillInOpts opts@(Playlists2{path=p} ) | p == ""  =do
     return opts{path=def}
 
 fillInOpts m = return m
-

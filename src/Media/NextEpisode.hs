@@ -1,4 +1,4 @@
-module Media.NextEpisode(nextEpisodes,nextEpisode, addToPlaylist) where
+module Media.NextEpisode(nextEpisodes,nextEpisode, addToPlaylist,getVideosInfos) where
 
 import Media.Args(filterPaths')
 import Media.IO(getVideosInfo,parseName,allMedia)
@@ -20,14 +20,14 @@ nextEpisode :: FilePath -> IO (Maybe FilePath)
 nextEpisode path = do
     (vinfos,ser,n) <- getVideosInfos path
     let res = filter (nextEpFilter ser n) vinfos
-    return $ 
+    return $
         case res of
         [x]   -> Just $ filename x
         _     -> Nothing
 
     where
     nextEpFilter :: Series -> EpNum ->  VideoInfo -> Bool
-    nextEpFilter curSeries  current VideoInfo{number=candidate,series=s} = 
+    nextEpFilter curSeries  current VideoInfo{number=candidate,series=s} =
         candidate == current + 1  && curSeries == s
 
 
@@ -40,7 +40,7 @@ nextEpisodes path = do
 
     where
     nextEpsFilter :: Series -> EpNum ->  VideoInfo -> Bool
-    nextEpsFilter curSeries  current VideoInfo{number=candidate,series=s} = 
+    nextEpsFilter curSeries  current VideoInfo{number=candidate,series=s} =
         candidate > current  && curSeries == s
 
 
@@ -57,15 +57,15 @@ getVideosInfos path =  do
 
 addToPlaylist :: [FilePath] -> IO ()
 addToPlaylist []     = return ()
-addToPlaylist (x:xs) = do 
+addToPlaylist (x:xs) = do
     putStrLn $ "Adding to playlist: " ++ x
     let esc     =  "playlist_clear"
-        esc2    = bashEscape ("loadfile \"" ++ "" ++ x ++ "\" append") 
+        esc2    = bashEscape ("loadfile \"" ++ "" ++ x ++ "\" append")
         command s = "echo  " ++ s ++ " > " ++ pipe
         commands = map command [esc,esc2]
     mapM_ (\s -> putStrLn $ "Command: " ++ s) commands
     {-runCommand $ commands !! 0-}
     runCommand $ commands !! 1
-    
-    addToPlaylist xs 
+
+    addToPlaylist xs
 

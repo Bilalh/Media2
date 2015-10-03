@@ -13,6 +13,45 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 
+executable organiseMedia
+  main-is:            OrganiseMedia.hs
+  hs-source-dirs:     src
+  other-modules:
+  build-depends:      base
+                     ,process
+                     ,shell-escape
+                     ,bytestring
+                     ,ansi-terminal
+                     ,containers >= 0.5.2
+                     ,filepath
+                     ,directory
+                     ,HDBC >=2.3
+                     ,HDBC-sqlite3 >=2.3
+                     ,time
+                     ,cmdargs
+                     ,regex-tdfa
+                     ,utf8-string
+                     ,text
+                     ,cryptohash
+                     ,unix
+
+  default-extensions:
+      FlexibleContexts
+
+  ghc-prof-options:
+      -auto-all
+      -caf-all
+  ghc-options:
+      -fwarn-incomplete-patterns
+      -fwarn-missing-signatures
+      -fwarn-name-shadowing
+      -fwarn-orphans
+      -fwarn-overlapping-patterns
+      -fwarn-tabs
+      -fwarn-unused-do-bind
+      -fwarn-unused-matches
+      -Wall
+      -fno-warn-unused-do-bind
 
 
 
@@ -34,6 +73,11 @@ executable nextEpisode
                      ,cmdargs
                      ,regex-tdfa
                      ,utf8-string
+                     ,text
+
+  default-extensions:
+      FlexibleContexts
+
   ghc-prof-options:
       -auto-all
       -caf-all
@@ -67,7 +111,12 @@ executable addEpisodeToHistory
                      ,cmdargs
                      ,regex-tdfa
                      ,split
-                      ,utf8-string
+                     ,utf8-string
+                     ,text
+
+  default-extensions:
+      FlexibleContexts
+
   ghc-prof-options:
       -auto-all
       -caf-all
@@ -103,6 +152,11 @@ test-suite spec
                   ,bytestring
                   ,parsec
                   ,utf8-string
+                  ,text
+
+  default-extensions:
+      FlexibleContexts
+
 
   --ghc-prof-options:
       ---auto-all
@@ -139,6 +193,11 @@ executable playlists
                      ,regex-tdfa
                      ,utf8-string
                      ,natural-sort
+                     ,text
+
+  default-extensions:
+      FlexibleContexts
+
 
   --ghc-prof-options:
       ---auto-all
@@ -174,6 +233,11 @@ executable media2
                      ,cmdargs
                      ,regex-tdfa
                      ,utf8-string
+                     ,text
+
+  default-extensions:
+      FlexibleContexts
+
   --ghc-prof-options:
       ---auto-all
       ---caf-all
@@ -207,6 +271,11 @@ executable hista
                       ,directory
                       ,process
                       ,utf8-string
+                      ,text
+
+  default-extensions:
+      FlexibleContexts
+
   --ghc-prof-options:
       ---auto-all
       ---caf-all
@@ -235,6 +304,11 @@ executable  nums
                       ,shell-escape
                       ,bytestring
                       ,utf8-string
+                      ,text
+
+  default-extensions:
+      FlexibleContexts
+
   --ghc-prof-options:
       ---auto-all
       ---caf-all
@@ -263,6 +337,11 @@ executable  numsf
                       ,shell-escape
                       ,bytestring
                       ,utf8-string
+                      ,text
+
+  default-extensions:
+      FlexibleContexts
+
 
 executable  numss
    main-is:            Numss.hs
@@ -278,3 +357,9 @@ executable  numss
                       ,shell-escape
                       ,bytestring
                       ,utf8-string
+                      ,text
+
+  default-extensions:
+      FlexibleContexts
+
+
